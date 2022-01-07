@@ -81,8 +81,8 @@ point on the checklist for the exam.
 
 ### Week 1
 
-- [ ] Create a git repository
-- [ ] Make sure that all team members have write access to the github repository
+- [x] Create a git repository
+- [x] Make sure that all team members have write access to the github repository
 - [ ] Create a dedicated environment for you project to keep track of your packages (using conda)
 - [ ] Create the initial file structure using cookiecutter
 - [ ] Fill out the `make_dataset.py` file such that it downloads whatever data you need and 
