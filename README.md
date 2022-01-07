@@ -16,7 +16,7 @@ The main task of our model is to perform binary sentiment classification using t
 
 
 The dataset used for the sentiment project is the following from hugging face:
-“https://huggingface.co/datasets/imdb”
+“ https://huggingface.co/datasets/imdb ”
 The IMDB dataset consists of 100.000 plain text comments regarding movies. 50.000 of which are labelled as a binary dataset using the label of either “neg” or “pos”. The other 50.000 data points are however unlabelled. Initially, the 50.000 labelled data points will be used for training and testing, however, the unlabelled set may be used for potential further pretraining, if seen fit.
 
 
