@@ -12,7 +12,7 @@ The model used for this project is BERT (Bidirectional Encoder Representations f
 
 The motivation for using BERT is that, despite its simplicity, it is a very powerful tool that has reached state-of-the-art results on several NLP tasks. Furthermore, it supports PyTorch which is in line with what is used in the course. Therefore, BERT fits perfectly into the goal of the project. To use machine learning operation tools - not designing cool AI models. 
 
-The main task of our model is to perform binary sentiment classification using text on the IMDb dataset. For the training, a fine-tuning method approach has been chosen. It's a wise trade-off， considering more time can be devoted to the use of tools our course provides. The model will be trained on a labelled sub-dataset after having pre-trained it on a large unlabelled dataset to achieve the effect of training the model faster. There is a Trainer API in the Transformers library, that allows for easy logging, gradient accumulation, mixed precision and some evaluations for the training.
+The main task of our model is to perform binary sentiment classification using text on the IMDb dataset. For the training, a fine-tuning method approach has been chosen. It is a wise trade-off， considering more time can be devoted to the use of the tools that our course provides. The model will be fine-tuned on a labelled sub-dataset after it having been pre-trained on a large unlabelled dataset to achieve the effect of training the model faster. There is a Trainer API in the Transformers library, which allows for easy logging, gradient accumulation, mixed precision and some evaluations for the training.
 
 
 The dataset used for the sentiment project is the following from hugging face:
