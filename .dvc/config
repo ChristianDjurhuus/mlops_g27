@@ -3,4 +3,4 @@
 ['remote "storage"']
     url = gdrive://1PkzX0i9O2XmGdWxO5YTwbCzB4wP1UH3x
 ['remote "remote_storage"']
-    url = ../mlops-g27-buck
+    url = gs://mlops-g27-buck/
