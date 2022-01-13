@@ -76,7 +76,7 @@ for epoch in range(num_epochs):
         batch_length += len(batch)
 
         print("[%d] loss: %.3f" % (epoch + 1, running_loss / batch_length))
-        running_loss = 0.0
+
         
 
         
