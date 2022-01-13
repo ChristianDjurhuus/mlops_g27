@@ -94,7 +94,7 @@ point on the checklist for the exam.
 - [ ] (Jonas) Construct one or multiple docker files for your code
 - [ ] (Jonas) Build the docker files locally and make sure they work as intended
 - [x] (Christrian) Write one or multiple configurations files for your experiments
-- [x] (Christrian) Used Hydra to load the configurations and manage your hyperparameters ```diff -could be improved but is up and running```
+- [x] (Christrian) Used Hydra to load the configurations and manage your hyperparameters ```diff - could be improved but is up and running```
 - [ ] When you have something that works somewhat, remember at some point to to some profiling and see if you can optimize your code
 - [ ] (Andreas) Use wandb to log training progress and other important metrics/artifacts in your code
 - [ ] Use pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
