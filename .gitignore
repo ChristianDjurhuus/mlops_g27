@@ -1,4 +1,4 @@
-# Ignore data file
+# Ignore data file:
 data
 
 # Windows:
@@ -19,3 +19,6 @@ Desktop.ini
 *.egg-info
 dist
 build
+
+#ignore logs:
+outputs/*

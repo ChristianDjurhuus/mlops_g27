@@ -1,0 +1,5 @@
+# @package _group_
+lr: 0.01
+epochs: 5 
+seed: 42
+model: "distilbert-base-uncased"
