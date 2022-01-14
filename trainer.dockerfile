@@ -20,7 +20,7 @@ WORKDIR /app
 
 ADD docker/requirements_train.txt .
 
-RUN pip install -r requirements_traub.txt --no-cache-dir
+RUN pip install -r requirements_train.txt --no-cache-dir
 RUN pip install dvc[gs]
 
 # Prøv at tilføje .git
