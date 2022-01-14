@@ -1,0 +1,13 @@
+[2022-01-14 13:55:40,303][__main__][INFO] - configuration: 
+ experiment:
+  lr: 0.01
+  epochs: 5
+  seed: 1984
+  model: bert-base-cased
+  weight_decay: 0.0
+  batch_size: 4
+
+[2022-01-14 13:55:45,873][datasets.arrow_dataset][WARNING] - Loading cached processed dataset at /Users/christiandjurhuus/Documents/DTU/6_semester/ml_ops/mlops_g27/data/processed/train/cache-80ce01bb83142417.arrow
+[2022-01-14 13:55:45,885][datasets.arrow_dataset][WARNING] - Loading cached processed dataset at /Users/christiandjurhuus/Documents/DTU/6_semester/ml_ops/mlops_g27/data/processed/test/cache-0baa3d38fcea9f65.arrow
+[2022-01-14 13:55:49,451][datasets.arrow_dataset][WARNING] - Loading cached shuffled indices for dataset at /Users/christiandjurhuus/Documents/DTU/6_semester/ml_ops/mlops_g27/data/processed/train/cache-518a33a92f62ecc3.arrow
+[2022-01-14 13:55:49,466][datasets.arrow_dataset][WARNING] - Loading cached shuffled indices for dataset at /Users/christiandjurhuus/Documents/DTU/6_semester/ml_ops/mlops_g27/data/processed/train/cache-ee5b7b1834842fbb.arrow
