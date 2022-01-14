@@ -38,4 +38,4 @@ RUN dvc remote modify --local remote_storage \
 RUN dvc pull
 
 # Entrypoint: The application we want to run when the image is being executed
-ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
+ENTRYPOINT ["python", "-u", "src/models/predict_model.py"]
