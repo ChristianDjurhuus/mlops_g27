@@ -85,14 +85,14 @@ point on the checklist for the exam.
 - [x] Make sure that all team members have write access to the github repository
 - [x] Create a dedicated environment for you project to keep track of your packages (using conda)
 - [x] Create the initial file structure using cookiecutter
-- [ ] (Xiang) Fill out the `make_dataset.py` file such that it downloads whatever data you need and 
+- [x] (Xiang) Fill out the `make_dataset.py` file such that it downloads whatever data you need and 
 - [ ] (Andreas) Add a model file and a training script and get that running (and evaluation)
 - [ ] Remember to fill out the `requirements.txt` file with whatever dependencies that you are using
 - [x] Remember to comply with good coding practices (`pep8`) while doing the project
 - [ ] Do a bit of code typing and remember to document essential parts of your code
 - [x] Setup version control for your data or part of your data
-- [ ] (Jonas) Construct one or multiple docker files for your code
-- [ ] (Jonas) Build the docker files locally and make sure they work as intended
+- [x] (Jonas) Construct one or multiple docker files for your code
+- [x] (Jonas) Build the docker files locally and make sure they work as intended
 - [x] (Christrian) Write one or multiple configurations files for your experiments
 - [x] (Christrian) Used Hydra to load the configurations and manage your hyperparameters ``` ***could be improved but is up and running***```
 - [ ] When you have something that works somewhat, remember at some point to to some profiling and see if you can optimize your code
@@ -102,11 +102,11 @@ point on the checklist for the exam.
 ### Week 2
 
 - [ ] Write unit tests related to the data part of your code
-- [ ] Write unit tests related to model construction
+- [x] Write unit tests related to model construction
 - [ ] Calculate the coverage.
 - [x] Get some continues integration running on the github repository
-- [ ] (optional) Create a new project on `gcp` and invite all group members to it
-- [ ] Create a data storage on `gcp` for you data
+- [x] (optional) Create a new project on `gcp` and invite all group members to it
+- [x] Create a data storage on `gcp` for you data
 - [ ] Create a trigger workflow for automatically building your docker images
 - [ ] Get your model training on `gcp`
 - [ ] Play around with distributed data loading
