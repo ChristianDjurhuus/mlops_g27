@@ -18,18 +18,19 @@ apt clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y git
 
 # Copying essetial files to the VM
-COPY requirements_docker.txt requirements_docker.txt
-COPY setup.py setup.py
-COPY src/models/ src/models/
-COPY .dvc/ .dvc/
-COPY data.dvc data.dvc
+# COPY requirements_docker.txt requirements_docker.txt
 
-# Install dependencies. 
-# Note: --no-cache-dir will reduce image size
-WORKDIR /
-RUN pip install -r requirements_docker.txt --no-cache-dir
+WORKDIR /app
+
+ADD requirements.txt .
+
+RUN pip install -r requirements.txt --no-cache-dir
+
+ADD . .
 
 # dvc
+RUN git config user.email "jonpo@dtu.dk"
+RUN git config user.name "jonpodtu"
 RUN dvc remote modify --local remote_storage \
         credentialpath key_file.json
 RUN dvc pull
