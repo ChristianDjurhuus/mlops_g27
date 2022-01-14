@@ -1,5 +1,4 @@
 import torch
-import argparse
 from transformers import AutoTokenizer
 from datasets import load_dataset
 from torch.utils.data import DataLoader
@@ -33,16 +32,16 @@ eval_dataloader = DataLoader(small_eval_dataset, batch_size=8)
 
 ########################################################################################################################
 
-def evaluate(self):
+
+
+def evaluate():
     print("Evaluating")
-    parser = argparse.ArgumentParser(description='Training arguments')
-    parser.add_argument('load_model_from', default="")
-    args = parser.par_args(sys.argv[2:])
-    print(args)
     metric = load_metric("accuracy")
-    model = AutoModelForSequenceClassification.from_pretrained(cfg.model, num_labels=2)
-    state_dict =torch.load(args.load_model_from)
-    model.load_state_dict(state_dict)
+    model = AutoModelForSequenceClassification.from_pretrained("bert-base-cased", num_labels=2)
+    model.load_state_dict(torch.load('trained_model.pt'))
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    print(device)
+    model.to(device)
     model.eval()
     with torch.no_grad():
         ### NEED TO DEFINE EVAL_DATALOADER ###
@@ -52,6 +51,7 @@ def evaluate(self):
             logits = outputs.logits
             predictions = torch.argmax(logits, dim=-1)
             metric.add_batch(predictions=predictions, references=batch["labels"])
-            print(f'Accuracy: {metric.compute()}')
+
+            print(f'Accuracy: {metric.compute().get("accuracy")*100}%')
 if __name__=="__main__":
     evaluate()
