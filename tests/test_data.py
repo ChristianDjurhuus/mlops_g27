@@ -28,13 +28,11 @@ def dataload():
 # Check if data is available, if not -> skip
 @pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 class TestClass:
-    def __init__(self):
-
-        self.tokenized_datasets = dataload()
-        self.full_train_dataset = tokenized_datasets["train"]
-        self.full_eval_dataset = tokenized_datasets["test"]
-        self.N_train = 25000
-        self.N_test = 25000
+    tokenized_datasets = dataload()
+    full_train_dataset = tokenized_datasets["train"]
+    full_eval_dataset = tokenized_datasets["test"]
+    N_train = 25000
+    N_test = 25000
 
     # Testing trainingdata
     def test_traindata(self):
