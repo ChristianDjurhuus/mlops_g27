@@ -42,5 +42,6 @@ jobs:
         pip install dvc
         pip install dvc[gdrive]
         pip install pytest
+        dvc remote modify --local remote_storage credentialpath key_file.json
         dvc pull
         pytest -v
