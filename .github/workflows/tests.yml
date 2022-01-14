@@ -16,6 +16,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - uses: iterative/setup-dvc@v1
 
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
@@ -38,5 +39,8 @@ jobs:
          pip install -r requirements_tests.txt
     - name: Test with pytest
       run: |
+        pip install dvc
+        pip install dvc[gdrive]
         pip install pytest
+        dvc pull
         pytest -v
