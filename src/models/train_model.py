@@ -1,6 +1,6 @@
 #Model related
 from transformers import AutoTokenizer
-from datasets import load_dataset
+from datasets import load_dataset, load_from_disk
 from transformers import AutoModelForSequenceClassification
 from torch.utils.data import DataLoader
 from transformers import get_scheduler
@@ -20,12 +20,16 @@ log = logging.getLogger(__name__)
 
 #################################### Temporaily importing data ###########################################################
 raw_datasets = load_dataset("imdb")
+# use our local dataset by this way
+# processed_datasets = load_from_disk('data/processed')
 tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
 def tokenize_function(examples):
     return tokenizer(examples["text"], padding="max_length", truncation=True)
 
 tokenized_datasets = raw_datasets.map(tokenize_function, batched=True)
+# use our local dataset by this way
+# tokenized_datasets = processed_datasets.map(tokenize_function, batched=True)
 small_train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(1000)) 
 small_eval_dataset = tokenized_datasets["test"].shuffle(seed=42).select(range(1000)) 
 full_train_dataset = tokenized_datasets["train"]
