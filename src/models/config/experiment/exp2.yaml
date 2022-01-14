@@ -4,3 +4,4 @@ epochs: 5
 seed: 42
 model: "distilbert-base-uncased"
 weight_decay: 0.0
+batch_size: 4
