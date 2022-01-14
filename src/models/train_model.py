@@ -28,10 +28,6 @@ def fetch_data(cfg: DictConfig):
 
     tokenized_datasets = processed_datasets.map(tokenize_function, batched=True)
 
-    small_train_dataset = (
-        tokenized_datasets["train"].shuffle(seed=42).select(range(1000))
-    )
-
     tokenized_datasets = tokenized_datasets.remove_columns(["text"])
     tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
     tokenized_datasets.set_format("torch")
