@@ -16,7 +16,7 @@ apt clean && rm -rf /var/lib/apt/lists/*
 
 # dvc
 RUN apt-get update && apt-get install -y git
-WORKDIR /app
+WORKDIR /mlops_g27
 
 ADD docker/requirements.txt .
 
