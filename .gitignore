@@ -22,4 +22,5 @@ dist
 build
 
 #ignore logs:
+src/models/outputs/*
 outputs/*

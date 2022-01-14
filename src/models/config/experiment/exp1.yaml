@@ -4,4 +4,4 @@ epochs: 5
 seed: 1984
 model: "bert-base-cased"
 weight_decay: 0.0
-
+batch_size: 4
