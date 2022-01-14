@@ -5,6 +5,11 @@ import pytest
 from datasets import load_from_disk
 from tests import _PATH_DATA
 
+from transformers import AutoTokenizer
+from datasets import load_from_disk
+import torch
+
+
 
 @pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def dataload():
@@ -55,7 +60,7 @@ class TestClass:
         labels = self.full_eval_dataset["labels"]
         assert (
             len(self.full_eval_dataset) == self.N_test
-        ), "Test data did not have the correct number of images"
+        ), f"Test data did not have the correct number of documents, but had: {len(self.full_eval_dataset)}"
 
         # Labels
         assert (

@@ -93,14 +93,8 @@ def train(cfg: DictConfig):
             log.info("[%d] loss: %.3f" % (epoch + 1, running_loss / batch_length))
             running_loss = 0.0
 
-    torch.save(model.state_dict(), 'trained_model.pt')
+    torch.save(model.state_dict(), "trained_model.pt")
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     train()
-
-
-
-
-
-
-

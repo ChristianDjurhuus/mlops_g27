@@ -5,12 +5,14 @@ from torch.utils.data import DataLoader
 from datasets import load_metric
 from transformers import AutoModelForSequenceClassification
 
-#################################### Temporaily importing data ###########################################################
+# Temporaily importing data
 raw_datasets = load_dataset("imdb")
 tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
+
 def tokenize_function(examples):
     return tokenizer(examples["text"], padding="max_length", truncation=True)
+
 
 tokenized_datasets = raw_datasets.map(tokenize_function, batched=True)
 
@@ -30,21 +32,19 @@ train_dataloader = DataLoader(small_train_dataset, shuffle=True, batch_size=8)
 eval_dataloader = DataLoader(small_eval_dataset, batch_size=8)
 
 
-########################################################################################################################
-
-
-
 def evaluate():
     print("Evaluating")
     metric = load_metric("accuracy")
-    model = AutoModelForSequenceClassification.from_pretrained("bert-base-cased", num_labels=2)
-    model.load_state_dict(torch.load('trained_model.pt'))
+    model = AutoModelForSequenceClassification.from_pretrained(
+        "bert-base-cased", num_labels=2
+    )
+    model.load_state_dict(torch.load("trained_model.pt"))
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     print(device)
     model.to(device)
     model.eval()
     with torch.no_grad():
-        ### NEED TO DEFINE EVAL_DATALOADER ###
+        # NEED TO DEFINE EVAL_DATALOADER
         for batch in eval_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
@@ -53,5 +53,7 @@ def evaluate():
             metric.add_batch(predictions=predictions, references=batch["labels"])
 
             print(f'Accuracy: {metric.compute().get("accuracy")*100}%')
-if __name__=="__main__":
+
+
+if __name__ == "__main__":
     evaluate()
