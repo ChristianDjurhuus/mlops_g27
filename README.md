@@ -101,7 +101,7 @@ point on the checklist for the exam.
 
 ### Week 2
 
-- [ ] Write unit tests related to the data part of your code
+- [x] Write unit tests related to the data part of your code
 - [x] Write unit tests related to model construction
 - [ ] Calculate the coverage.
 - [x] Get some continues integration running on the github repository
