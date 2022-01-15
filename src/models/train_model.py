@@ -1,3 +1,5 @@
+from data_path import get_data_path
+
 # Model related
 from transformers import AutoTokenizer
 from datasets import load_from_disk
@@ -13,7 +15,9 @@ from omegaconf import DictConfig
 from omegaconf import OmegaConf
 import logging
 
-from data_path import get_data_path
+#Experiment tracking
+import wandb
+from wandb import init
 
 log = logging.getLogger(__name__)
 
@@ -49,51 +53,64 @@ def train(cfg: DictConfig):
     log.info(f"configuration: \n {OmegaConf.to_yaml(cfg)}")
     cfg = cfg.experiment
 
-    torch.manual_seed(cfg.seed)
+    config = {
+    "model": cfg.model,
+    "batch_size":  cfg.batch_size,
+    "lr": cfg.lr,
+    "epochs": cfg.epochs,
+    "seed": cfg.seed
+}
 
-    # getting data from disk
-    train_dataloader = fetch_data(cfg)
+    with init(project="dtu_mlops_g27", entity="dtu_mlops_g27", config=config):
+        cfg = wandb.config
 
-    # Defining model
-    model = AutoModelForSequenceClassification.from_pretrained(cfg.model, num_labels=2)
-    optimizer = AdamW(model.parameters(), lr=cfg.lr)
+        torch.manual_seed(cfg.seed)
 
-    # Implementing learning rate scheduler
-    num_epochs = cfg.epochs
-    num_training_steps = num_epochs * len(train_dataloader)
+        # getting data from disk
+        train_dataloader = fetch_data(cfg)
 
-    lr_scheduler = get_scheduler(
-        "linear",
-        optimizer=optimizer,
-        num_warmup_steps=0,
-        num_training_steps=num_training_steps,
-    )
+        # Defining model
+        model = AutoModelForSequenceClassification.from_pretrained(cfg.model, num_labels=2)
+        optimizer = AdamW(model.parameters(), lr=cfg.lr)
 
-    # Checking for gpu's
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    print(device)
-    model.to(device)
+        # Implementing learning rate scheduler
+        num_epochs = cfg.epochs
+        num_training_steps = num_epochs * len(train_dataloader)
 
-    model.train()
-    for epoch in range(num_epochs):
-        running_loss = 0.0
-        batch_length = 0.0
-        for batch in train_dataloader:
-            batch = {k: v.to(device) for k, v in batch.items()}
-            outputs = model(**batch)
-            loss = outputs.loss
-            loss.backward()
-            optimizer.step()
-            lr_scheduler.step()
-            optimizer.zero_grad()
+        lr_scheduler = get_scheduler(
+            "linear",
+            optimizer=optimizer,
+            num_warmup_steps=0,
+            num_training_steps=num_training_steps,
+        )
 
-            running_loss += loss.item()
-            batch_length += len(batch)
+        # Checking for gpu's
+        device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        print(device)
+        model.to(device)
 
-            log.info("[%d] loss: %.3f" % (epoch + 1, running_loss / batch_length))
+        wandb.watch(model,log="all", log_freq=10)
+        model.train()
+        for epoch in range(num_epochs):
             running_loss = 0.0
+            batch_length = 0.0
+            for batch_idx, batch in enumerate(train_dataloader):
+                batch = {k: v.to(device) for k, v in batch.items()}
+                outputs = model(**batch)
+                loss = outputs.loss
+                loss.backward()
+                optimizer.step()
+                lr_scheduler.step()
+                optimizer.zero_grad()
 
-    torch.save(model.state_dict(), "trained_model.pt")
+                running_loss += loss.item()
+
+        print("\tEpoch", epoch + 1, "complete!", "\tAverage Loss: ", running_loss / (batch_idx*cfg.batch_size))
+        wandb.log({"epoch": epoch, "loss": running_loss / (batch_idx*cfg.batch_size)})
+
+        torch.save(model.state_dict(), "trained_model.pt")
+        torch.onnx.export(model, batch, "model.onnx")
+        wandb.save("model.onnx")
 
 
 if __name__ == "__main__":

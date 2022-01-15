@@ -1,6 +1,6 @@
 # @package _group_
 lr: 0.01
-epochs: 5
+epochs: 1
 seed: 1984
 model: "bert-base-cased"
 weight_decay: 0.0
