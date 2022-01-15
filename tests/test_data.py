@@ -1,28 +1,16 @@
-from tests import _PATH_DATA
-import os
-import numpy as np
-import pytest
-from datasets import load_from_disk
-from tests import _PATH_DATA
+from datasets import load_dataset
 
 from transformers import AutoTokenizer
-from datasets import load_from_disk
 import torch
 
 
-
-@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def dataload():
     # Fetching data
-    processed_dataset = load_from_disk(os.path.join(_PATH_DATA, "processed"))
-
+    processed_dataset = load_dataset("imdb")
     tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
-
     def tokenize_function(examples):
         return tokenizer(examples["text"], padding="max_length", truncation=True)
-
     tokenized_datasets = processed_dataset.map(tokenize_function, batched=True)
-
     tokenized_datasets = tokenized_datasets.remove_columns(["text"])
     tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
     tokenized_datasets.set_format("torch")
@@ -30,8 +18,6 @@ def dataload():
     return tokenized_datasets
 
 
-# Check if data is available, if not -> skip
-@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 class TestClass:
     tokenized_datasets = dataload()
     full_train_dataset = tokenized_datasets["train"]
