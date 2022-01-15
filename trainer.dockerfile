@@ -2,7 +2,7 @@
 FROM gcr.io/cloud-builders/gsutil
 COPY key_file.json key_file.json
 
-RUN gcloud auth activate-service-account g27-bucket@mlops-g27.iam.gserviceaccount.com --key-file=key_file.json
+#RUN gcloud auth activate-service-account g27-bucket@mlops-g27.iam.gserviceaccount.com --key-file=key_file.json
 RUN echo finished login to gcloud
 
 # Base image
