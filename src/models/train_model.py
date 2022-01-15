@@ -23,26 +23,25 @@ log = logging.getLogger(__name__)
 
 
 def fetch_data(cfg: DictConfig):
-    path = get_data_path("mlops_g27/data/processed")
-    processed_datasets = load_from_disk(path)
+    #path = get_data_path("mlops_g27/data/processed")
+    #processed_datasets = load_from_disk(path)
     tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
     def tokenize_function(examples):
         return tokenizer(examples["text"], padding="max_length", truncation=True)
 
+    path = get_data_path("mlops_g27/data/processed/train")
+    processed_datasets = load_from_disk(path)
     tokenized_datasets = processed_datasets.map(tokenize_function, batched=True)
-
     tokenized_datasets = tokenized_datasets.remove_columns(["text"])
     tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
     tokenized_datasets.set_format("torch")
 
-    small_train_dataset = (
-        tokenized_datasets["train"].shuffle(seed=cfg.seed).select(range(1000))
-    )
-
     train_dataloader = DataLoader(
-        small_train_dataset, shuffle=True, batch_size=cfg.batch_size
+        tokenized_datasets, shuffle=True, batch_size=cfg.batch_size, num_workers=8
     )
+    del processed_datasets
+    del tokenized_datasets
 
     return train_dataloader
 
@@ -93,7 +92,6 @@ def train(cfg: DictConfig):
         model.train()
         for epoch in range(num_epochs):
             running_loss = 0.0
-            batch_length = 0.0
             for batch_idx, batch in enumerate(train_dataloader):
                 batch = {k: v.to(device) for k, v in batch.items()}
                 outputs = model(**batch)
@@ -104,6 +102,9 @@ def train(cfg: DictConfig):
                 optimizer.zero_grad()
 
                 running_loss += loss.item()
+
+                print(f"Train epoch: {epoch} [{batch_idx * len(batch)}/{len(train_dataloader.dataset)}]")
+                
 
         print("\tEpoch", epoch + 1, "complete!", "\tAverage Loss: ", running_loss / (batch_idx*cfg.batch_size))
         wandb.log({"epoch": epoch, "loss": running_loss / (batch_idx*cfg.batch_size)})
