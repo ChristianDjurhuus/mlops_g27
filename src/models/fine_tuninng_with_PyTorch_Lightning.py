@@ -46,11 +46,11 @@ class ImdbDataModule(LightningDataModule):
 
     def val_dataloader(self):
         return DataLoader(self.tokenized_datasets["valid"].shuffle(seed=42).select(range(5)), self.batch_size)
-        return DataLoader(self.tokenized_datasets["valid"], self.batch_size)
+        # return DataLoader(self.tokenized_datasets["valid"], self.batch_size)
 
     def test_dataloader(self):
         return DataLoader(self.tokenized_datasets["test"].shuffle(seed=42).select(range(5)), self.batch_size)
-        return DataLoader(self.tokenized_datasets["test"], self.batch_size)
+        # return DataLoader(self.tokenized_datasets["test"], self.batch_size)
 
     def convert_to_features(self, examples):
         return self.tokenizer(examples["text"], padding="max_length", truncation=True)
