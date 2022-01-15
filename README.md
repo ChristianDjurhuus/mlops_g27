@@ -86,7 +86,7 @@ point on the checklist for the exam.
 - [x] Create a dedicated environment for you project to keep track of your packages (using conda)
 - [x] Create the initial file structure using cookiecutter
 - [x] (Xiang) Fill out the `make_dataset.py` file such that it downloads whatever data you need and 
-- [ ] (Andreas) Add a model file and a training script and get that running (and evaluation)
+- [x] (Andreas) Add a model file and a training script and get that running (and evaluation)
 - [ ] Remember to fill out the `requirements.txt` file with whatever dependencies that you are using
 - [x] Remember to comply with good coding practices (`pep8`) while doing the project
 - [ ] Do a bit of code typing and remember to document essential parts of your code
@@ -96,14 +96,14 @@ point on the checklist for the exam.
 - [x] (Christian) Write one or multiple configurations files for your experiments
 - [x] (Christian) Used Hydra to load the configurations and manage your hyperparameters ``` ***could be improved but is up and running***```
 - [ ] When you have something that works somewhat, remember at some point to to some profiling and see if you can optimize your code
-- [ ] (Andreas) Use wandb to log training progress and other important metrics/artifacts in your code
-- [ ] Use pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
+- [ ] (Andreas / Christian) Use wandb to log training progress and other important metrics/artifacts in your code
+- [ ] (Xiang) Use pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
 
 ### Week 2
 
 - [x] Write unit tests related to the data part of your code
 - [x] Write unit tests related to model construction
-- [ ] Calculate the coverage.
+- [x] Calculate the coverage. ``` currently 88%```
 - [x] Get some continues integration running on the github repository
 - [x] (optional) Create a new project on `gcp` and invite all group members to it
 - [x] Create a data storage on `gcp` for you data
