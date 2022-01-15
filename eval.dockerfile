@@ -30,7 +30,6 @@ COPY .dvc .dvc
 COPY data.dvc data.dvc
 COPY .git .git
 COPY data_path.py data_path.py
-COPY __init__.py __init__.py
 COPY setup.py setup.py
 
 
