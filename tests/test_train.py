@@ -6,8 +6,6 @@ from transformers import get_scheduler
 import torch
 from transformers import AdamW
 
-import unittest
-
 
 # Ideas for testing
 # https://thenerdstation.medium.com/how-to-unit-test-machine-learning-code-57cf6fd81765
@@ -39,7 +37,7 @@ del small_train_dataset
 del tokenized_datasets
 
 
-class testClassTraining(unittest.TestCase):
+class testClassTraining():
     def testing_optimizer(self):
         model = AutoModelForSequenceClassification.from_pretrained(
             "bert-base-cased", num_labels=2
