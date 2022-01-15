@@ -33,6 +33,7 @@ COPY data_path.py data_path.py
 COPY __init__.py __init__.py
 COPY setup.py setup.py
 
+
 # dvc
 RUN git config user.email "jonpo@dtu.dk"
 RUN git config user.name "jonpodtu"
@@ -44,4 +45,4 @@ RUN dvc pull
 RUN pip install -e .
 
 # Entrypoint: The application we want to run when the image is being executed
-ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
+ENTRYPOINT ["python", "-u", "src/models/predict_model.py"]

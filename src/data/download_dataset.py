@@ -12,5 +12,6 @@ def download_dataset(name='imdb', save_path='data/raw'):
             os.makedirs(save_path)
         dataset_dict.save_to_disk(save_path)
 
+
 if __name__ == "__main__":
     download_dataset('imdb', 'data/raw')
