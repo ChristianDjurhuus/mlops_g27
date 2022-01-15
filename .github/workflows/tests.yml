@@ -40,7 +40,4 @@ jobs:
       	secret_key: ${{ secrets.SECRET_KEY}}
       run: |
         pip install pytest
-	gcloud auth activate-service-account g27-bucket@mlops-g27.iam.gserviceaccount.com --key-file="$secret_key"
-	pip install dvc[gs]
-	dvc pull
         pytest -v
