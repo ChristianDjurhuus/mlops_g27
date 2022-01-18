@@ -84,8 +84,6 @@ class ImdbTransformer(LightningModule):
         loss = torch.stack([x["loss"] for x in outputs]).mean()
         self.log("train_loss", loss, prog_bar=True)
 
-    ## TODO: need to rewrite the validaton part below 
-    ##       which running normally, but may exist some logical error
     def validation_step(self, batch, batch_idx):
         outputs = self(**batch)
         val_loss, logits = outputs[:2] #  # or outputs.loss & outputs.logits
