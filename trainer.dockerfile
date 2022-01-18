@@ -40,5 +40,7 @@ RUN dvc pull
 # python package
 RUN pip install -e .
 
+EXPOSE $PORT
+
 # Entrypoint: The application we want to run when the image is being executed
 ENTRYPOINT ["python", "-u", "src/models/fine_tuninng_with_PyTorch_Lightning.py"]
