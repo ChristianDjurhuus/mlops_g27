@@ -12,16 +12,24 @@ jobs:
 
         name: Setup Gcloud Account
         runs-on: ubuntu-latest
+        container: docker://ghcr.io/iterative/cml:0-dvc2-base1
         env:
           IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
         steps:
-
         - name: Login
           uses: google-github-actions/setup-gcloud@v0
           with:
             project_id: ${{ secrets.GCP_PROJECT_ID }}
             service_account_email: ${{ secrets.GCP_EMAIL }}
             service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+        - uses: actions/checkout@v2
+        - name: Pull DVC
+          env:
+            GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+          run: |
+            dvc pull --run-cache
+            dvc repro
 
         - name: Configure Docker
           run: gcloud auth configure-docker --quiet
