@@ -4,7 +4,7 @@ FROM gcr.io/cloud-builders/gsutil
 ARG KEY_FILE_CONTENT
 RUN gcloud auth activate-service-account --key-file=$KEY_FILE_CONTENT
 RUN echo finished login to gcloud
-
+#Hej
 # Base image
 FROM python:3.7-slim
 
