@@ -1,15 +1,16 @@
-from datasets import load_dataset
-
-from transformers import AutoTokenizer
 import torch
+from datasets import load_dataset
+from transformers import AutoTokenizer
 
 
 def dataload():
     # Fetching data
     processed_dataset = load_dataset("imdb")
     tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
+
     def tokenize_function(examples):
         return tokenizer(examples["text"], padding="max_length", truncation=True)
+
     tokenized_datasets = processed_dataset.map(tokenize_function, batched=True)
     tokenized_datasets = tokenized_datasets.remove_columns(["text"])
     tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
@@ -46,7 +47,8 @@ class TestClass:
         labels = self.full_eval_dataset["labels"]
         assert (
             len(self.full_eval_dataset) == self.N_test
-        ), f"Test data did not have the correct number of documents, but had: {len(self.full_eval_dataset)}"
+        ), f"Test data did not have the correct number of documents, " \
+           f"but had: {len(self.full_eval_dataset)}"
 
         # Labels
         assert (

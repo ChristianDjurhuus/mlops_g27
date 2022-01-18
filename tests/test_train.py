@@ -1,11 +1,8 @@
-from transformers import AutoTokenizer
-from datasets import load_dataset
-from transformers import AutoModelForSequenceClassification
-from torch.utils.data import DataLoader
-from transformers import get_scheduler
 import torch
-from transformers import AdamW
-
+from datasets import load_dataset
+from torch.utils.data import DataLoader
+from transformers import (AdamW, AutoModelForSequenceClassification,
+                          AutoTokenizer, get_scheduler)
 
 # Ideas for testing
 # https://thenerdstation.medium.com/how-to-unit-test-machine-learning-code-57cf6fd81765
