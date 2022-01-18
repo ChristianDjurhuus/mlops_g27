@@ -1,6 +1,7 @@
 # Running gcloud
 FROM gcr.io/cloud-builders/gsutil
 
+RUN pip install cryptography
 ARG KEY_FILE_CONTENT
 RUN echo $KEY_FILE_CONTENT | gcloud auth activate-service-account g27-bucket@mlops-g27.iam.gserviceaccount.com --key-file=-
 RUN echo finished login to gcloud
