@@ -1,5 +1,6 @@
 # Running gcloud
 FROM gcr.io/cloud-builders/gsutil
+
 ARG KEY_FILE_CONTENT
 #RUN gcloud auth activate-service-account g27-bucket@mlops-g27.iam.gserviceaccount.com --key-file=$KEY_FILE_CONTENT
 #RUN echo finished login to gcloud
@@ -34,8 +35,6 @@ COPY setup.py setup.py
 # dvc
 RUN git config user.email "jonpo@dtu.dk"
 RUN git config user.name "jonpodtu"
-RUN dvc remote modify --local remote_storage \
-        credentialpath $KEY_FILE_CONTENT
 RUN dvc pull
 
 # python package
