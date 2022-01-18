@@ -30,7 +30,7 @@ jobs:
           uses: actions/checkout@v2
 
         - name: Build Docker image
-          run: docker build --build-arg arg=${{ secrets.GCP_CREDENTIALS }} . -t $IMAGE_NAME -f trainer.dockerfile
+          run: docker build . -t $IMAGE_NAME -f trainer.dockerfile --build-arg arg=${{ secrets.GCP_CREDENTIALS }}
 
         - name: Test Docker image
           run: docker run $IMAGE_NAME sh -c "go test -v"
