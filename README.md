@@ -1,7 +1,11 @@
-project_work
+Machine Learning Operations
+Exam Project: Group 27
 ==============================
-
-Exam project in ml ops course
+This GitHub Repository contains the main components of our exam project. The group consists of the following students from the Technical University of Denmark: 
+- Jonas Poulsen (s194243)
+- Andreas Hornemann Nielsen (s194236)
+- Christian Vestergaard Djurhuus (s194244)
+- Xiang Bai (s213120)
 
 Project description
 ------------
@@ -97,7 +101,7 @@ point on the checklist for the exam.
 - [x] (Christian) Used Hydra to load the configurations and manage your hyperparameters ``` ***could be improved but is up and running***```
 - [ ] When you have something that works somewhat, remember at some point to to some profiling and see if you can optimize your code
 - [ ] (Andreas / Christian) Use wandb to log training progress and other important metrics/artifacts in your code
-- [ ] (Xiang) Use pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
+- [x] (Xiang) Use pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
 
 ### Week 2
 
