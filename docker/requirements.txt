@@ -1,9 +1,9 @@
-dvc==2.9.3
-dvc[gs]
+click==8.0.3
 datasets==1.17.0
 hydra-core==1.1.1
-numpy==1.21.2
 omegaconf==2.1.1
-torch==1.10.1
-transformers==4.15.0
+python-dotenv==0.19.2
+pytorch_lightning==1.5.8
+torch==1.9.0
+transformers==4.11.0
 wandb==0.12.9
