@@ -29,6 +29,7 @@ jobs:
           run: |
             pip install dvc
             pip install dvc[gs]
+            dvc remote modify --local remote_storage credentialpath ${{ secrets.GCP_CREDENTIALS }}
             dvc pull --run-cache
             dvc repro
 
