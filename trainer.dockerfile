@@ -1,10 +1,10 @@
 # Running gcloud
 FROM gcr.io/cloud-builders/gsutil
 
-ARG KEY_FILE_CONTENT
-RUN gcloud auth activate-service-account --key-file=$KEY_FILE_CONTENT
-RUN echo finished login to gcloud
-#Hej
+#ARG KEY_FILE_CONTENT
+#RUN gcloud auth activate-service-account g27-bucket@mlops-g27.iam.gserviceaccount.com --key-file=$KEY_FILE_CONTENT
+#RUN echo finished login to gcloud
+
 # Base image
 FROM python:3.7-slim
 
