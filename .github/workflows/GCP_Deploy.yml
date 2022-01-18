@@ -22,12 +22,14 @@ jobs:
             service_account_email: ${{ secrets.GCP_EMAIL }}
             service_account_key: ${{ secrets.GCP_CREDENTIALS }}
             
+        - uses: actions/checkout@v2    
         - uses: iterative/setup-dvc@v1
         - name: DVC pull
           run: |
             pip install dvc
             pip install dvc[gs]
-            dvc remote modify --local remote_storage ${{ secrets.GCP_CREDENTIALS }} --run-cache
+            dvc remote modify --local remote_storage ${{ secrets.GCP_CREDENTIALS }}
+            dvc repro
 
         - name: Configure Docker
           run: gcloud auth configure-docker --quiet
