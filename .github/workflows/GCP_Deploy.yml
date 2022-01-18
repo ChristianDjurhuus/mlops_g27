@@ -27,7 +27,7 @@ jobs:
           run: |
             pip install dvc
             pip install dvc[gs]
-            dvc remote modify --local remote_storage ${{ secrets.GCP_CREDENTIALS }}
+            dvc remote modify --local remote_storage ${{ secrets.GCP_CREDENTIALS }} --run-cache
 
         - name: Configure Docker
           run: gcloud auth configure-docker --quiet
