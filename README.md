@@ -1,7 +1,9 @@
-project_work
+Machine Learning Operations
+Exam Project: Group 27
 ==============================
-
-Exam project in ml ops course
+This GitHub Repository contains the main components of our exam project. The group consists of the following students from the Technical University of Denmark: 
+- Jonas Poulsen (s194243)
+- 
 
 Project description
 ------------
