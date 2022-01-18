@@ -15,7 +15,7 @@ from omegaconf import DictConfig
 from omegaconf import OmegaConf
 import logging
 
-#Experiment tracking
+# Experiment tracking
 import wandb
 from wandb import init
 
@@ -23,8 +23,8 @@ log = logging.getLogger(__name__)
 
 
 def fetch_data(cfg: DictConfig):
-    #path = get_data_path("mlops_g27/data/processed")
-    #processed_datasets = load_from_disk(path)
+    # path = get_data_path("mlops_g27/data/processed")
+    # processed_datasets = load_from_disk(path)
     tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
     def tokenize_function(examples):
@@ -53,12 +53,12 @@ def train(cfg: DictConfig):
     cfg = cfg.experiment
 
     config = {
-    "model": cfg.model,
-    "batch_size":  cfg.batch_size,
-    "lr": cfg.lr,
-    "epochs": cfg.epochs,
-    "seed": cfg.seed
-}
+        "model": cfg.model,
+        "batch_size": cfg.batch_size,
+        "lr": cfg.lr,
+        "epochs": cfg.epochs,
+        "seed": cfg.seed,
+    }
 
     with init(project="dtu_mlops_g27", entity="dtu_mlops_g27", config=config):
         cfg = wandb.config
@@ -69,7 +69,9 @@ def train(cfg: DictConfig):
         train_dataloader = fetch_data(cfg)
 
         # Defining model
-        model = AutoModelForSequenceClassification.from_pretrained(cfg.model, num_labels=2)
+        model = AutoModelForSequenceClassification.from_pretrained(
+            cfg.model, num_labels=2
+        )
         optimizer = AdamW(model.parameters(), lr=cfg.lr)
 
         # Implementing learning rate scheduler
@@ -84,11 +86,13 @@ def train(cfg: DictConfig):
         )
 
         # Checking for gpu's
-        device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        device = (
+            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        )
         print(device)
         model.to(device)
 
-        wandb.watch(model,log="all", log_freq=10)
+        wandb.watch(model, log="all", log_freq=10)
         model.train()
         for epoch in range(num_epochs):
             running_loss = 0.0
@@ -103,11 +107,18 @@ def train(cfg: DictConfig):
 
                 running_loss += loss.item()
 
-                print(f"Train epoch: {epoch} [{batch_idx * len(batch)}/{len(train_dataloader.dataset)}]")
-                
+                print(
+                    f"Train epoch: {epoch} [{batch_idx*len(batch)}/{len(train_dataloader.dataset)}]"
+                )
 
-        print("\tEpoch", epoch + 1, "complete!", "\tAverage Loss: ", running_loss / (batch_idx*cfg.batch_size))
-        wandb.log({"epoch": epoch, "loss": running_loss / (batch_idx*cfg.batch_size)})
+        print(
+            "\tEpoch",
+            epoch + 1,
+            "complete!",
+            "\tAverage Loss: ",
+            running_loss / (batch_idx * cfg.batch_size),
+        )
+        wandb.log({"epoch": epoch, "loss": running_loss / (batch_idx * cfg.batch_size)})
 
         torch.save(model.state_dict(), "trained_model.pt")
         torch.onnx.export(model, batch, "model.onnx")
