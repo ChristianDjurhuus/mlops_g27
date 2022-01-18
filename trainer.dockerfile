@@ -18,6 +18,9 @@ apt clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y git
 WORKDIR /mlops_g27
 
+ENV PORT 8080
+ENV HOST 0.0.0.0
+
 ADD docker/requirements.txt .
 
 RUN pip install -r requirements.txt --no-cache-dir
