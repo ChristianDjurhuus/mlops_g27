@@ -41,4 +41,4 @@ RUN dvc pull
 RUN pip install -e .
 
 # Entrypoint: The application we want to run when the image is being executed
-ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
+ENTRYPOINT ["python", "-u", "src/models/fine_tuninng_with_PyTorch_Lightning.py"]
