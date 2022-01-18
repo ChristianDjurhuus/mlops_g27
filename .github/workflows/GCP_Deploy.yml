@@ -27,7 +27,7 @@ jobs:
           with:
             python-version: '3.7'
             architecture: 'x64'
-        - uses: iterative/setup-dvc@v1
+        - uses: iterative/setup-cml@v1
         - name: DVC pull
           run: |
             pip install dvc
