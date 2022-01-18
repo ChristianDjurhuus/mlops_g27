@@ -2,7 +2,7 @@
 FROM gcr.io/cloud-builders/gsutil
 
 ARG KEY_FILE_CONTENT
-RUN echo $KEY_FILE_CONTENT | gcloud auth activate-service-account --key-file=-
+RUN gcloud auth activate-service-account g27-bucket@mlops-g27.iam.gserviceaccount.com --key-file=$KEY_FILE_CONTENT
 RUN echo finished login to gcloud
 
 # Base image
