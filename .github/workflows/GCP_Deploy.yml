@@ -12,12 +12,13 @@ jobs:
 
         name: Setup Gcloud Account
         runs-on: ubuntu-latest
+        container: docker://dvcorg/cml-py3:latest
         env:
           IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
         steps:
         - name: Login
           uses: google-github-actions/setup-gcloud@v0
-          with:
+          env:
             project_id: ${{ secrets.GCP_PROJECT_ID }}
             service_account_email: ${{ secrets.GCP_EMAIL }}
             service_account_key: ${{ secrets.GCP_CREDENTIALS }}
@@ -28,7 +29,7 @@ jobs:
           run: |
             pip install dvc
             pip install dvc[gs]
-            dvc remote modify --local remote_storage ${{ secrets.GCP_CREDENTIALS }}
+            dvc pull --run-cache
             dvc repro
 
         - name: Configure Docker
