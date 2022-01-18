@@ -7,9 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-
     deploy:
-
         name: Setup Gcloud Account
         runs-on: ubuntu-latest
         env:
@@ -21,18 +19,6 @@ jobs:
             project_id: ${{ secrets.GCP_PROJECT_ID }}
             service_account_email: ${{ secrets.GCP_EMAIL }}
             service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-            
-        - uses: actions/checkout@v2
-        - uses: actions/setup-python@v2
-          with:
-            python-version: '3.7'
-        - name: DVC pull
-          run: |
-            pip install dvc
-            pip install dvc[gs]
-            dvc remote modify remote_storage url gs://mlops-g27-buck
-            dvc pull --run-cache
-            dvc repro
 
         - name: Configure Docker
           run: gcloud auth configure-docker --quiet
@@ -41,7 +27,7 @@ jobs:
           uses: actions/checkout@v2
 
         - name: Build Docker image
-          run: docker build . -t $IMAGE_NAME -f trainer.dockerfile --build-arg KEY_FILE_CONTENT=${{ secrets.GCP_CREDENTIALS }}
+          run: docker build . -t $IMAGE_NAME -f trainer.dockerfile
 
         - name: Test Docker image
           run: docker run $IMAGE_NAME sh -c "go test -v"
