@@ -17,7 +17,7 @@ jobs:
             GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
           run: |
             dvc pull --run-cache
-            dvc repro
+            #dvc repro
 
         - name: Configure Docker
           run: gcloud auth configure-docker --quiet
