@@ -16,6 +16,7 @@ jobs:
           env:
             GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
           run: |
+            dvc remote modify --local myremote credentialpath ${{ secrets.GCP_CREDENTIALS }}
             dvc pull --run-cache
             dvc repro
 
