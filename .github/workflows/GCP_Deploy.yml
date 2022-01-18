@@ -26,13 +26,11 @@ jobs:
         - uses: actions/setup-python@v2
           with:
             python-version: '3.7'
-            architecture: 'x64'
-        - uses: iterative/setup-cml@v1
         - name: DVC pull
           run: |
             pip install dvc
             pip install dvc[gs]
-            #dvc remote modify --local remote_storage credentialpath ${{ secrets.GCP_CREDENTIALS }}
+            dvc remote modify remote_storage url gs://mlops-g27-buck
             dvc pull --run-cache
             dvc repro
 
