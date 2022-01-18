@@ -3,8 +3,8 @@ Exam Project: Group 27
 ==============================
 This GitHub Repository contains the main components of our exam project. The group consists of the following students from the Technical University of Denmark: 
 - Jonas Poulsen (s194243)
--
--
+- Andreas Hornemann Nielsen (s194236)
+- Christian Vestergaard Djurhuus (s194244)
 - Xiang Bai (s213120)
 
 Project description
