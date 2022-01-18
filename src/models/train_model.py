@@ -32,6 +32,7 @@ def fetch_data(cfg: DictConfig):
     tokenized_datasets = tokenized_datasets.remove_columns(["text"])
     tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
     tokenized_datasets.set_format("torch")
+#    tokenized_datasets = tokenized_datasets.select(range(100))
 
     train_dataloader = DataLoader(
         tokenized_datasets, shuffle=True, batch_size=cfg.batch_size, num_workers=8
@@ -83,7 +84,8 @@ def train(cfg: DictConfig):
 
         # Checking for gpu's
         device = (
-            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+            #torch.device("cuda") if torch.cuda.is_available() else
+             torch.device("cpu")
         )
         print(device)
         model.to(device)
@@ -117,8 +119,8 @@ def train(cfg: DictConfig):
         wandb.log({"epoch": epoch, "loss": running_loss / (batch_idx * cfg.batch_size)})
 
         torch.save(model.state_dict(), "trained_model.pt")
-        torch.onnx.export(model, batch, "model.onnx")
-        wandb.save("model.onnx")
+#        torch.onnx.export(model, batch, "model.onnx")
+#        wandb.save("model.onnx")
 
 
 if __name__ == "__main__":
