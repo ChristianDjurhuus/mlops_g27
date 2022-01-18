@@ -5,12 +5,13 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from data_path import get_data_path
 
-
+# Fetching the data
 def fetch_data():
     path = get_data_path("mlops_g27/data/processed")
     processed_datasets = load_from_disk(path)
     tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
+    # Tokenizing the dataset
     def tokenize_function(examples):
         return tokenizer(examples["text"], padding="max_length", truncation=True)
 
@@ -19,15 +20,16 @@ def fetch_data():
     tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
     tokenized_datasets.set_format("torch")
 
-    small_test_dataset = (
-        tokenized_datasets["test"].shuffle(seed=1984).select(range(1000))
+    # Creating dataloader
+    test_dataset = (
+        tokenized_datasets["test"].shuffle(seed=1984)
     )
     test_dataloader = DataLoader(
-        small_test_dataset, shuffle=True, batch_size=4
+        test_dataset, shuffle=True, batch_size=4
     )
     return test_dataloader
 
-
+# Evaluating script of the model
 def evaluate():
     print("Evaluating")
     metric = load_metric("accuracy")
@@ -41,6 +43,7 @@ def evaluate():
     print(device)
     model.to(device)
     model.eval()
+    # Evaluating loop over batches in test_dataloader
     with torch.no_grad():
         for batch in test_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
