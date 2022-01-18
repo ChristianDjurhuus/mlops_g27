@@ -1,18 +1,10 @@
 import datasets
 import torch
-from pytorch_lightning import (
-    LightningDataModule,
-    LightningModule,
-    Trainer,
-    seed_everything,
-)
+from pytorch_lightning import (LightningDataModule, LightningModule, Trainer,
+                               seed_everything)
 from torch.utils.data import DataLoader
-from transformers import (
-    AdamW,
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    get_scheduler,
-)
+from transformers import (AdamW, AutoModelForSequenceClassification,
+                          AutoTokenizer, get_scheduler)
 
 AVAIL_GPUS = min(1, torch.cuda.device_count())
 

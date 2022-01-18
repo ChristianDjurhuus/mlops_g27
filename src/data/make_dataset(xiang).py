@@ -1,5 +1,6 @@
 import os
-from datasets import load_from_disk, DatasetDict
+
+from datasets import DatasetDict, load_from_disk
 from download_dataset import download_dataset
 
 # os.getcwd()

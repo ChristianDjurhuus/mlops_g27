@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-import click
+import glob
 import logging
-from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
 import os
 import subprocess
 import zipfile
-import glob
+from pathlib import Path
+
+import click
+import datasets
 import torch
+from dotenv import find_dotenv, load_dotenv
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoTokenizer
-import datasets
 
 max_len = 512
 

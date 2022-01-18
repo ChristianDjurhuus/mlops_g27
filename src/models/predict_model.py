@@ -1,9 +1,8 @@
 import torch
-from transformers import AutoTokenizer
-from datasets import load_from_disk
+from datasets import load_from_disk, load_metric
 from torch.utils.data import DataLoader
-from datasets import load_metric
-from transformers import AutoModelForSequenceClassification
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
 from data_path import get_data_path
 
 

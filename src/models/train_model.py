@@ -1,23 +1,19 @@
-from data_path import get_data_path
-
-# Model related
-from transformers import AutoTokenizer
-from datasets import load_from_disk
-from transformers import AutoModelForSequenceClassification
-from torch.utils.data import DataLoader
-from transformers import get_scheduler
-import torch
-from transformers import AdamW
+import logging
 
 # Config related
 import hydra
-from omegaconf import DictConfig
-from omegaconf import OmegaConf
-import logging
-
+import torch
 # Experiment tracking
 import wandb
+from datasets import load_from_disk
+from omegaconf import DictConfig, OmegaConf
+from torch.utils.data import DataLoader
+# Model related
+from transformers import (AdamW, AutoModelForSequenceClassification,
+                          AutoTokenizer, get_scheduler)
 from wandb import init
+
+from data_path import get_data_path
 
 log = logging.getLogger(__name__)
 
