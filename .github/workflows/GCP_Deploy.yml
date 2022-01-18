@@ -17,7 +17,6 @@ jobs:
             GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
           run: |
             dvc remote modify remote_storage gdrive_use_service_account true
-            dvc remote modify --local remote_storage credentialpath ${{ secrets.GCP_CREDENTIALS }}
             dvc pull --run-cache
             dvc repro
 
