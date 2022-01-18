@@ -1,30 +1,32 @@
-from data_path import get_data_path
+# Tackle some problems of importing local modules
+import sys
+from pathlib import Path
 
-# Model related
-from transformers import AutoTokenizer
-from datasets import load_from_disk
-from transformers import AutoModelForSequenceClassification
-from torch.utils.data import DataLoader
-from transformers import get_scheduler
-import torch
-from transformers import AdamW
+path_root = Path(__file__).parents[2]
+sys.path.append(str(path_root))
+
+import logging
 
 # Config related
 import hydra
-from omegaconf import DictConfig
-from omegaconf import OmegaConf
-import logging
-
+import torch
 #Experiment tracking
 import wandb
+from datasets import load_from_disk
+from omegaconf import DictConfig, OmegaConf
+from torch.utils.data import DataLoader
+# Model related
+from transformers import (AdamW, AutoModelForSequenceClassification,
+                          AutoTokenizer, get_scheduler)
 from wandb import init
+
+from data_path import get_data_path
 
 log = logging.getLogger(__name__)
 
 
 def fetch_data(cfg: DictConfig):
-    #path = get_data_path("mlops_g27/data/processed")
-    #processed_datasets = load_from_disk(path)
+
     tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
     def tokenize_function(examples):
