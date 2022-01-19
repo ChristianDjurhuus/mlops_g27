@@ -45,10 +45,10 @@ class TestClass:
     def test_testdata(self):
         # Image structure
         labels = self.full_eval_dataset["labels"]
-        assert (
-            len(self.full_eval_dataset) == self.N_test
-        ), f"Test data did not have the correct number of documents, " \
-           f"but had: {len(self.full_eval_dataset)}"
+        assert len(self.full_eval_dataset) == self.N_test, (
+            f"Test data did not have the correct number of documents, "
+            f"but had: {len(self.full_eval_dataset)}"
+        )
 
         # Labels
         assert (
