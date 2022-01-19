@@ -5,6 +5,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from data_path import get_data_path
 
+
 # Fetching the data
 def fetch_data():
     path = get_data_path("mlops_g27/data/processed")
@@ -21,13 +22,10 @@ def fetch_data():
     tokenized_datasets.set_format("torch")
 
     # Creating dataloader
-    test_dataset = (
-        tokenized_datasets["test"].shuffle(seed=1984)
-    )
-    test_dataloader = DataLoader(
-        test_dataset, shuffle=True, batch_size=4
-    )
+    test_dataset = tokenized_datasets["test"].shuffle(seed=1984)
+    test_dataloader = DataLoader(test_dataset, shuffle=True, batch_size=4)
     return test_dataloader
+
 
 # Evaluating script of the model
 def evaluate():
