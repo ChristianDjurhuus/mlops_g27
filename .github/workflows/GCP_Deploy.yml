@@ -29,8 +29,9 @@ jobs:
         - name: Build Docker image
           run: docker build . -t $IMAGE_NAME -f trainer.dockerfile
 
-        - name: Test Docker image
-          run: docker run $IMAGE_NAME sh -c "go test -v"
+#       TEST HERE
+#        - name: Test Docker image
+#          run: docker run $IMAGE_NAME sh -c "go test -v"
 
         - name: Push Docker image
           run: docker push $IMAGE_NAME
