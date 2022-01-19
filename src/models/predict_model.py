@@ -4,6 +4,7 @@ from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from data_path import get_data_path
+#from src.models.model import ImdbTransformer
 
 
 # Fetching the data
@@ -36,7 +37,7 @@ def evaluate():
     model = AutoModelForSequenceClassification.from_pretrained(
         "bert-base-cased", num_labels=2
     )
-    model.load_state_dict(torch.load("trained_model.pt"))
+    model.load_state_dict(torch.load("outputs/2022-01-19/15-29-53/model1.pt"))
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     print(device)
     model.to(device)

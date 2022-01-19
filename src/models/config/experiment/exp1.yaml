@@ -10,3 +10,8 @@ model: "bert-base-cased"
 data_path: "data/processed"
 debug_mode: True
 force_CPU: True
+
+wandb:
+  project: "dtu_mlops_g27"
+  entity: "dtu_mlops_g27"
+  model_dir: 'models'

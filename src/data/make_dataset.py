@@ -4,7 +4,6 @@ from datasets import DatasetDict, load_from_disk
 from download_dataset import download_dataset
 
 # os.getcwd()
-# os.chdir('C:\\Users\\Andreas\\Documents\\GitHub\\mlops_g27')
 
 # Download the raw datasets and save to "data/raw"
 download_dataset(name="imdb", save_path="data/raw")

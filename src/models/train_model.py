@@ -65,11 +65,15 @@ def main(cfg: DictConfig):
         "epochs": epochs,
         "seed": seed,
     }
-    wandb_logger = WandbLogger(project="dtu_mlops_g27", entity="dtu_mlops_g27", config=config)
+    wandb_logger = WandbLogger(project=cfg.wandb.model_dir, entity=cfg.wandb.entity, config=config)
 
     # Train Model
-    trainer = Trainer(max_epochs=epochs, gpus=GPUs, logger=wandb_logger)
+    trainer = Trainer(max_epochs=epochs, 
+                      gpus=GPUs, 
+                      logger=wandb_logger, 
+                      default_root_dir=to_absolute_path(cfg.wandb.model_dir))
     trainer.fit(model, datamodule=dm)
+    torch.save(model.state_dict(), 'final_model.pt')
 
 
 if __name__ == "__main__":
