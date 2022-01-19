@@ -1,0 +1,47 @@
+# Dockerfile-gpu
+FROM nvidia/cuda:10.2-cudnn7-runtime
+
+# Installs necessary dependencies.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+         wget \
+         curl \
+         python3-dev && \
+     rm -rf /var/lib/apt/lists/*
+
+# Installs pip.
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3 get-pip.py && \
+    pip3 install setuptools && \
+    rm get-pip.py
+
+# git is needed to run DVC as we use git for version control
+RUN apt-get update && apt-get install -y git
+WORKDIR /mlops_g27
+
+# Installing basic requirements
+ADD docker/requirements.txt .
+RUN pip3 install --upgrade pip
+RUN pip3 install cython
+RUN pip3 install -r requirements.txt --no-cache-dir
+RUN pip3 install dvc[gs]
+
+# Importing nessecary folders 
+COPY src/models/ src/models/
+COPY setup.py setup.py
+COPY .dvc .dvc
+COPY data.dvc data.dvc
+COPY .git .git
+COPY data_path.py data_path.py
+COPY setup.py setup.py
+
+RUN git config user.email "jonpo@dtu.dk"
+RUN git config user.name "jonpodtu"
+
+# Pull data into folder: data
+RUN dvc pull
+
+# python package
+RUN pip3 install -e .
+
+# Entrypoint: The application we want to run when the image is being executed
+ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
