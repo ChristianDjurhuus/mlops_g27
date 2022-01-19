@@ -14,10 +14,15 @@ apt clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y git
 WORKDIR /mlops_g27
 
-# Installing basic requirements
+
+# Make sure gsutil will use the default service account
+RUN echo '[GoogleCompute]\nservice_account = default' > /etc/boto.cfg
+
 ADD docker/requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 RUN pip install dvc[gs]
+
+
 
 # Importing nessecary folders 
 COPY src/models/ src/models/
@@ -36,8 +41,6 @@ RUN dvc pull
 
 # python package
 RUN pip install -e .
-
-EXPOSE 8080
 
 # Entrypoint: The application we want to run when the image is being executed
 ENTRYPOINT ["python", "-u", "src/models/fine_tuninng_with_PyTorch_Lightning.py"]
