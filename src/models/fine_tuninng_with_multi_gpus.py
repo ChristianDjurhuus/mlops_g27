@@ -1,13 +1,21 @@
 import os
-import datasets
+
+# Torch Imports
 import torch
-import wandb
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning import (LightningDataModule, LightningModule, Trainer,
                                seed_everything)
 from torch.utils.data import DataLoader
+
+# Experiment tracking and setup
+import hydra
+from hydra.utils import to_absolute_path
+from omegaconf import DictConfig
+
+# Transformers
 from transformers import (AdamW, AutoModelForSequenceClassification,
                           AutoTokenizer, get_scheduler)
+import datasets
 
 class ImdbDataModule(LightningDataModule):
     """A Pytorch-Lightning DataModule"""
@@ -17,12 +25,14 @@ class ImdbDataModule(LightningDataModule):
         model_name: str = "bert-base-cased",
         data_path: str = "data/processed",
         batch_size: int = 32,
+        debug = False
     ):
         super().__init__()
         self.model_name = model_name
         self.data_path = data_path
         self.batch_size = batch_size
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
+        self.debug=debug
 
     def setup(self, stage=None):
         self.datasets = datasets.load_from_disk(self.data_path)
@@ -40,25 +50,21 @@ class ImdbDataModule(LightningDataModule):
         AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
 
     def train_dataloader(self):
-        return DataLoader(
-            self.tokenized_datasets["train"].shuffle(seed=42).select(range(3200)),
-            self.batch_size,
-        )
-        # return DataLoader(self.tokenized_datasets["train"], self.batch_size)
+        if self.debug:
+            return DataLoader(
+                self.tokenized_datasets["train"].shuffle(seed=42).select(range(4)),
+                self.batch_size,
+            )
+        else:
+            return DataLoader(self.tokenized_datasets["train"], self.batch_size)
 
     def val_dataloader(self):
-        return DataLoader(
-            self.tokenized_datasets["valid"].shuffle(seed=42).select(range(1600)),
-            self.batch_size,
-        )
-        # return DataLoader(self.tokenized_datasets["valid"], self.batch_size)
-
-    def test_dataloader(self):
-        return DataLoader(
-            self.tokenized_datasets["test"].shuffle(seed=42).select(range(1600)),
-            self.batch_size,
-        )
-        # return DataLoader(self.tokenized_datasets["test"], self.batch_size)
+        if self.debug:
+            return DataLoader(
+                self.tokenized_datasets["valid"].shuffle(seed=42).select(range(2)),
+                self.batch_size,
+            )
+        return DataLoader(self.tokenized_datasets["valid"], self.batch_size)
 
     def convert_to_features(self, examples):
         return self.tokenizer(examples["text"], padding="max_length", truncation=True)
@@ -67,6 +73,8 @@ class ImdbDataModule(LightningDataModule):
 class ImdbTransformer(LightningModule):
     """A Pytorch-Lightning DataModule"""
 
+    # The different parameters are initialized and
+    # utilized through save_hyperparmeters() function
     def __init__(
         self,
         model_name: str = "bert-base-cased",
@@ -136,24 +144,39 @@ class ImdbTransformer(LightningModule):
         return [optimizer], [scheduler]
 
 
-def main():
+@hydra.main(config_path="config", config_name="default_config.yaml")
+def main(cfg: DictConfig):
     # Hyperparmeters
-    lr = 5e-4
-    epochs = 20
-    seed = 42
-    model = "bert-base-cased"
-    batch_size = 16
-
-    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
     os.environ["HYDRA_FULL_ERROR"] = "1"
-    GPUs= min(1, torch.cuda.device_count())
+    cfg = cfg.experiment
+    lr = cfg.hyper_param["lr"]
+    epochs = cfg.hyper_param["epochs"]
+    batch_size = cfg.hyper_param["batch_size"]
+    
+    # Seed and model-type
+    seed = cfg.seed
+    model = cfg.model
+    
+    # DEBUG mode: Use small datasets instead of whole
+    debug_toggle = cfg.debug_mode
+
+    # Return wheither there is 1 or 0 GPUs
+    if cfg.force_CPU == True:
+        GPUs = 0
+    else:
+        GPUs = min(1, torch.cuda.device_count())
+        if GPUs == 1:
+            os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+            os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 
     # Fix random seed
     seed_everything(seed)
 
     # Load Data
-    dm = ImdbDataModule("bert-base-cased", "data/processed", batch_size=batch_size)
+    dm = ImdbDataModule(model_name=model, 
+                        data_path=to_absolute_path(cfg.data_path), 
+                        batch_size=batch_size,
+                        debug = debug_toggle)
     dm.prepare_data()
     dm.setup("fit")
 
@@ -164,7 +187,7 @@ def main():
         batch_size=batch_size,
     )
 
-    # Wandb
+    # Directing the hyperparameters to wandb
     config = {
         "model": model,
         "batch_size": batch_size,
