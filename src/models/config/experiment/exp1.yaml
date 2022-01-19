@@ -1,7 +1,17 @@
 # @package _group_
-lr: 0.01
-epochs: 1
+hyper_param:
+  lr: 0.01
+  epochs: 1
+  batch_size: 4
+  weighted_decay: 0.0
+
 seed: 1984
 model: "bert-base-cased"
-weight_decay: 0.0
-batch_size: 4
+data_path: "data/processed"
+debug_mode: True
+force_CPU: True
+
+wandb:
+  project: "dtu_mlops_g27"
+  entity: "dtu_mlops_g27"
+  model_dir: 'models'

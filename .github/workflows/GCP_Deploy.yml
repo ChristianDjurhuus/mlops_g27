@@ -29,11 +29,12 @@ jobs:
         - name: Build Docker image
           run: docker build . -t $IMAGE_NAME -f trainer.dockerfile
 
-        - name: Test Docker image
-          run: docker run $IMAGE_NAME sh -c "go test -v"
+#       TEST HERE
+#        - name: Test Docker image
+#          run: docker run $IMAGE_NAME sh -c "go test -v"
 
         - name: Push Docker image
           run: docker push $IMAGE_NAME
 
-        - name: Deploy Docker image
-          run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed --quiet --memory 16G --cpu 4
+#        - name: Deploy Docker image
+#          run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed --quiet --memory 16G --cpu 4

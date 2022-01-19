@@ -1,8 +1,12 @@
 import torch
 from datasets import load_dataset
 from torch.utils.data import DataLoader
-from transformers import (AdamW, AutoModelForSequenceClassification,
-                          AutoTokenizer, get_scheduler)
+from transformers import (
+    AdamW,
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    get_scheduler,
+)
 
 # Ideas for testing
 # https://thenerdstation.medium.com/how-to-unit-test-machine-learning-code-57cf6fd81765
@@ -34,7 +38,7 @@ del small_train_dataset
 del tokenized_datasets
 
 
-class testClassTraining():
+class testClassTraining:
     def testing_optimizer(self):
         model = AutoModelForSequenceClassification.from_pretrained(
             "bert-base-cased", num_labels=2

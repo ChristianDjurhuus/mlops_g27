@@ -1,10 +1,18 @@
 import datasets
 import torch
-from pytorch_lightning import (LightningDataModule, LightningModule, Trainer,
-                               seed_everything)
+from pytorch_lightning import (
+    LightningDataModule,
+    LightningModule,
+    Trainer,
+    seed_everything,
+)
 from torch.utils.data import DataLoader
-from transformers import (AdamW, AutoModelForSequenceClassification,
-                          AutoTokenizer, get_scheduler)
+from transformers import (
+    AdamW,
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    get_scheduler,
+)
 
 AVAIL_GPUS = min(1, torch.cuda.device_count())
 
@@ -148,7 +156,7 @@ def main():
     )
 
     # Train Model
-    trainer = Trainer(max_epochs=4, gpus=AVAIL_GPUS)
+    trainer = Trainer(max_epochs=4, gpus=AVAIL_GPUS, default_root_dir="/models")
     trainer.fit(model, datamodule=dm)
 
 
