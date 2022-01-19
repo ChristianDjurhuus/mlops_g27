@@ -156,7 +156,7 @@ def main():
     )
 
     # Train Model
-    trainer = Trainer(max_epochs=4, gpus=AVAIL_GPUS)
+    trainer = Trainer(max_epochs=4, gpus=AVAIL_GPUS, default_root_dir="/models")
     trainer.fit(model, datamodule=dm)
 
 
