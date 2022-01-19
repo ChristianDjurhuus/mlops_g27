@@ -43,9 +43,10 @@ def evaluate():
         )
     model.load_from_checkpoint('models/dtu_mlops_g27/1j9e0rwl/checkpoints/epoch=19-step=399.ckpt')
     
+    # if there is a GPU, the pytorch lightning will move data to cuda automaticly (i guess.)
     # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    print(device)
-    model.to(device)
+    # print(device)
+    # model.to(device)
     model.eval()
     with torch.no_grad():
         for batch in test_dataloader:
