@@ -1,21 +1,13 @@
+import os
 import datasets
 import torch
-from pytorch_lightning import (
-    LightningDataModule,
-    LightningModule,
-    Trainer,
-    seed_everything,
-)
+import wandb
+from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning import (LightningDataModule, LightningModule, Trainer,
+                               seed_everything)
 from torch.utils.data import DataLoader
-from transformers import (
-    AdamW,
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    get_scheduler,
-)
-
-AVAIL_GPUS = min(1, torch.cuda.device_count())
-
+from transformers import (AdamW, AutoModelForSequenceClassification,
+                          AutoTokenizer, get_scheduler)
 
 class ImdbDataModule(LightningDataModule):
     """A Pytorch-Lightning DataModule"""
@@ -49,21 +41,21 @@ class ImdbDataModule(LightningDataModule):
 
     def train_dataloader(self):
         return DataLoader(
-            self.tokenized_datasets["train"].shuffle(seed=42).select(range(5)),
+            self.tokenized_datasets["train"].shuffle(seed=42).select(range(3200)),
             self.batch_size,
         )
         # return DataLoader(self.tokenized_datasets["train"], self.batch_size)
 
     def val_dataloader(self):
         return DataLoader(
-            self.tokenized_datasets["valid"].shuffle(seed=42).select(range(5)),
+            self.tokenized_datasets["valid"].shuffle(seed=42).select(range(1600)),
             self.batch_size,
         )
         # return DataLoader(self.tokenized_datasets["valid"], self.batch_size)
 
     def test_dataloader(self):
         return DataLoader(
-            self.tokenized_datasets["test"].shuffle(seed=42).select(range(5)),
+            self.tokenized_datasets["test"].shuffle(seed=42).select(range(1600)),
             self.batch_size,
         )
         # return DataLoader(self.tokenized_datasets["test"], self.batch_size)
@@ -79,6 +71,7 @@ class ImdbTransformer(LightningModule):
         self,
         model_name: str = "bert-base-cased",
         learning_rate: float = 5e-5,
+        batch_size: int = 32
     ):
         super().__init__()
         # save all hyperparameters
@@ -126,7 +119,9 @@ class ImdbTransformer(LightningModule):
         train_loader = self.trainer.datamodule.train_dataloader()
 
         # Calculate total steps
-        self.total_steps = self.trainer.max_epochs * len(train_loader)
+        tb_size = self.hparams.batch_size * max(1, self.trainer.gpus)
+        ab_size = self.trainer.accumulate_grad_batches * float(self.trainer.max_epochs)
+        self.total_steps = (len(train_loader.dataset) // tb_size) // ab_size
 
     def configure_optimizers(self):
         """Prepare optimizer and schedule (linear)"""
@@ -142,21 +137,45 @@ class ImdbTransformer(LightningModule):
 
 
 def main():
+    # Hyperparmeters
+    lr = 5e-4
+    epochs = 20
+    seed = 42
+    model = "bert-base-cased"
+    batch_size = 16
+
+    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+    os.environ["HYDRA_FULL_ERROR"] = "1"
+    GPUs= min(1, torch.cuda.device_count())
+
     # Fix random seed
-    seed_everything(42)
+    seed_everything(seed)
 
     # Load Data
-    dm = ImdbDataModule("bert-base-cased", "data/processed", batch_size=1)
+    dm = ImdbDataModule("bert-base-cased", "data/processed", batch_size=batch_size)
     dm.prepare_data()
     dm.setup("fit")
 
     # Import Model
     model = ImdbTransformer(
-        model_name="bert-base-cased",
+        model_name=model,
+        learning_rate=lr,
+        batch_size=batch_size,
     )
 
+    # Wandb
+    config = {
+        "model": model,
+        "batch_size": batch_size,
+        "lr": lr,
+        "epochs": epochs,
+        "seed": seed,
+    }
+    wandb_logger = WandbLogger(project="dtu_mlops_g27", entity="dtu_mlops_g27", config=config)
+
     # Train Model
-    trainer = Trainer(max_epochs=4, gpus=AVAIL_GPUS)
+    trainer = Trainer(max_epochs=epochs, gpus=GPUs, logger=wandb_logger)
     trainer.fit(model, datamodule=dm)
 
 
