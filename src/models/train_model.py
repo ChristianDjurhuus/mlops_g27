@@ -1,4 +1,5 @@
 import os
+import time
 
 # Torch Imports
 import torch
@@ -42,7 +43,7 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 @hydra.main(config_path="config", config_name="default_config.yaml")
 def main(cfg: DictConfig):
     # Hyperparmeters
-    wandb.init(mode="disabled")
+    wandb.init(mode=cfg.wandb.mode)
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     os.environ["HYDRA_FULL_ERROR"] = "1"
     cfg = cfg.experiment
@@ -110,12 +111,13 @@ def main(cfg: DictConfig):
     trainer.fit(model, datamodule=dm)
 
     # If local path given, assume to save it locally
+    timestr = time.strftime("%Y%m%d-%H%M%S")
     if not os.path.exists(cfg.local_path):
         os.makedirs(cfg.local_path)
     tmp_file_name = os.path.join(cfg.local_path, MODEL_FILE_NAME)    
     torch.save(model.state_dict(), tmp_file_name)
     if cfg.google_bucket_path != None:
-        upload_blob(cfg.google_bucket_path, tmp_file_name, "model1.pt")
+        upload_blob(cfg.google_bucket_path, tmp_file_name, timestr+"_model.pt")
 
 
 

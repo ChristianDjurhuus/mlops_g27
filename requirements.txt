@@ -2,8 +2,11 @@ click==8.0.3
 datasets==1.17.0
 hydra-core==1.1.1
 omegaconf==2.1.1
+protobuf==3.19.3
 python-dotenv==0.19.2
 pytorch_lightning==1.5.8
-setuptools==60.2.0
-transformers==4.15.0
+scikit_learn==1.0.2
+setuptools==60.5.0
+torch==1.9.0
+transformers==4.11.0
 wandb==0.12.9

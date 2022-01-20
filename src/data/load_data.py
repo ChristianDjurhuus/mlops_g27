@@ -49,7 +49,7 @@ class ImdbDataModule(LightningDataModule):
     def train_dataloader(self):
         if self.debug:
             return DataLoader(
-                self.tokenized_datasets["train"].shuffle(seed=self.seed).select(range(1000)),
+                self.tokenized_datasets["train"].shuffle(seed=self.seed).select(range(7500)),
                 self.batch_size,
                 num_workers=self.n_workers
             )
@@ -59,7 +59,7 @@ class ImdbDataModule(LightningDataModule):
     def val_dataloader(self):
         if self.debug:
             return DataLoader(
-                self.tokenized_datasets["valid"].shuffle(seed=self.seed).select(range(250)),
+                self.tokenized_datasets["valid"].shuffle(seed=self.seed).select(range(2500)),
                 self.batch_size, 
                 num_workers=self.n_workers
             )
