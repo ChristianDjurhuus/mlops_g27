@@ -31,7 +31,7 @@ jobs:
 
 #       TEST HERE
 #        - name: Test Docker image
-#          run: docker run $IMAGE_NAME sh -c "go test -v"
+#          run: docker run $IMAGE_NAME 
 
         - name: Push Docker image
           run: docker push $IMAGE_NAME
