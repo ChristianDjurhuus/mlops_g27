@@ -2,7 +2,7 @@
 hyper_param:
   lr: 0.01
   epochs: 10
-  batch_size: 24
+  batch_size: 4
   weighted_decay: 0.0
 
 # No need to change to replicate
