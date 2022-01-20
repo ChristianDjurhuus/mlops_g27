@@ -4,7 +4,8 @@ from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from data_path import get_data_path
-#from src.models.model import ImdbTransformer
+
+# from src.models.model import ImdbTransformer
 
 
 # Fetching the data

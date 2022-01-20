@@ -2,13 +2,22 @@ import os
 import datasets
 import torch
 import wandb
-import sklearn # Do not use pipreqs delete it
+import sklearn  # Do not use pipreqs delete it
 from pytorch_lightning.loggers import WandbLogger
-from pytorch_lightning import (LightningDataModule, LightningModule, Trainer,
-                               seed_everything)
+from pytorch_lightning import (
+    LightningDataModule,
+    LightningModule,
+    Trainer,
+    seed_everything,
+)
 from torch.utils.data import DataLoader
-from transformers import (AdamW, AutoModelForSequenceClassification,
-                          AutoTokenizer, get_scheduler)
+from transformers import (
+    AdamW,
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    get_scheduler,
+)
+
 
 class ImdbDataModule(LightningDataModule):
     """A Pytorch-Lightning DataModule"""
@@ -72,7 +81,7 @@ class ImdbTransformer(LightningModule):
         self,
         model_name: str = "bert-base-cased",
         learning_rate: float = 5e-5,
-        batch_size: int = 32
+        batch_size: int = 32,
     ):
         super().__init__()
         # save all hyperparameters
@@ -148,7 +157,7 @@ def main():
     # os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     # os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
     # os.environ["HYDRA_FULL_ERROR"] = "1"
-    GPUs= min(1, torch.cuda.device_count())
+    GPUs = min(1, torch.cuda.device_count())
 
     # Fix random seed
     seed_everything(seed)
@@ -159,11 +168,7 @@ def main():
     dm.setup("fit")
 
     # Import Model
-    model = ImdbTransformer(
-        model_name=model,
-        learning_rate=lr,
-        batch_size=batch_size,
-    )
+    model = ImdbTransformer(model_name=model, learning_rate=lr, batch_size=batch_size,)
 
     # Wandb
     config = {
@@ -174,7 +179,9 @@ def main():
         "seed": seed,
     }
     # wandb.init(project="dtu_mlops_g27", entity="dtu_mlops_g27", config=config)
-    wandb_logger = WandbLogger(project="dtu_mlops_g27", entity="dtu_mlops_g27", config=config)
+    wandb_logger = WandbLogger(
+        project="dtu_mlops_g27", entity="dtu_mlops_g27", config=config
+    )
 
     # Train Model
     trainer = Trainer(max_epochs=epochs, gpus=GPUs, logger=wandb_logger)

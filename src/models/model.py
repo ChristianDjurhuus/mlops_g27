@@ -1,9 +1,11 @@
 # Torch Imports
 import torch
 from pytorch_lightning import LightningModule
+
 # Transformers
 from transformers import AdamW, AutoModelForSequenceClassification, get_scheduler
 import datasets
+
 
 class ImdbTransformer(LightningModule):
     """A Pytorch-Lightning DataModule"""
@@ -14,7 +16,7 @@ class ImdbTransformer(LightningModule):
         self,
         model_name: str = "bert-base-cased",
         learning_rate: float = 5e-5,
-        batch_size: int = 32
+        batch_size: int = 32,
     ):
         super().__init__()
         # save all hyperparameters

@@ -48,5 +48,5 @@ with torch.no_grad():
 # output = model(**tokenized_sample)
 # print(output)
 
- with open('..\..\models\model.pkl', 'wb') as file:
+with open("..\..\models\model.pkl", "wb") as file:
     pickle.dump(model, file)

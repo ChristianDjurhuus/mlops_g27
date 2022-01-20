@@ -90,8 +90,7 @@ def train(cfg: DictConfig):
 
         # Checking for gpu's
         device = (
-            torch.device("cuda") if torch.cuda.is_available() else
-            torch.device("cpu")
+            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         )
         print(device)
         model.to(device)

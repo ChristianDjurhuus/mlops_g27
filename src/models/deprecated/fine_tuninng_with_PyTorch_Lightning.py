@@ -76,9 +76,7 @@ class ImdbTransformer(LightningModule):
     """A Pytorch-Lightning DataModule"""
 
     def __init__(
-        self,
-        model_name: str = "bert-base-cased",
-        learning_rate: float = 5e-5,
+        self, model_name: str = "bert-base-cased", learning_rate: float = 5e-5,
     ):
         super().__init__()
         # save all hyperparameters
@@ -151,9 +149,7 @@ def main():
     dm.setup("fit")
 
     # Import Model
-    model = ImdbTransformer(
-        model_name="bert-base-cased",
-    )
+    model = ImdbTransformer(model_name="bert-base-cased",)
 
     # Train Model
     trainer = Trainer(max_epochs=4, gpus=AVAIL_GPUS, default_root_dir="/models")

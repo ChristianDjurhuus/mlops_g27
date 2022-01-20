@@ -25,9 +25,7 @@ def fetch_data():
     small_test_dataset = (
         tokenized_datasets["test"].shuffle(seed=1984).select(range(1000))
     )
-    test_dataloader = DataLoader(
-        small_test_dataset, shuffle=True, batch_size=4
-    )
+    test_dataloader = DataLoader(small_test_dataset, shuffle=True, batch_size=4)
     return test_dataloader
 
 
@@ -37,12 +35,12 @@ def evaluate():
     # initializing wandb logging
     test_dataloader = fetch_data()
     model = ImdbTransformer(
-            model_name="bert-base-cased",
-            learning_rate=0.001,
-            batch_size=1,
-        )
-    model.load_from_checkpoint('models/dtu_mlops_g27/1j9e0rwl/checkpoints/epoch=19-step=399.ckpt')
-    
+        model_name="bert-base-cased", learning_rate=0.001, batch_size=1,
+    )
+    model.load_from_checkpoint(
+        "models/dtu_mlops_g27/1j9e0rwl/checkpoints/epoch=19-step=399.ckpt"
+    )
+
     # if there is a GPU, the pytorch lightning will move data to cuda automaticly (i guess.)
     # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     # print(device)

@@ -6,8 +6,7 @@ from datasets import Dataset
 from google.cloud import storage
 from pytorch_lightning import LightningModule
 from torch.utils.data import DataLoader
-from transformers import (AdamW, AutoModelForSequenceClassification,
-                          get_scheduler)
+from transformers import AdamW, AutoModelForSequenceClassification, get_scheduler
 
 
 class ImdbTransformer(LightningModule):
