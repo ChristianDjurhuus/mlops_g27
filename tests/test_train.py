@@ -7,6 +7,7 @@ from transformers import (
     AutoTokenizer,
     get_scheduler,
 )
+from src.models.model import ImdbTransformer
 
 # Ideas for testing
 # https://thenerdstation.medium.com/how-to-unit-test-machine-learning-code-57cf6fd81765
@@ -82,7 +83,11 @@ class testClassTraining:
                     ), "Parameters are not being optimized"
                 break
 
+
     def test_loss(self):
+        """
+        Test that loss is not 0
+        """
         model = AutoModelForSequenceClassification.from_pretrained(
             "bert-base-cased", num_labels=2
         )

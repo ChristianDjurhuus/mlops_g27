@@ -16,8 +16,8 @@ class ImdbDataModule(LightningDataModule):
         model_name: str = "bert-base-cased",
         data_path: str = "data/processed",
         batch_size: int = 32,
-        debug = False,
-        seed = None
+        debug=False,
+        seed=None
     ):
         super().__init__()
         self.model_name = model_name
@@ -54,7 +54,9 @@ class ImdbDataModule(LightningDataModule):
                 num_workers=self.n_workers
             )
         else:
-            return DataLoader(self.tokenized_datasets["train"], batch_size=self.batch_size, num_workers=self.n_workers)
+            return DataLoader(self.tokenized_datasets["train"],
+                              batch_size=self.batch_size,
+                              num_workers=self.n_workers)
 
     def val_dataloader(self):
         if self.debug:
@@ -63,7 +65,9 @@ class ImdbDataModule(LightningDataModule):
                 self.batch_size, 
                 num_workers=self.n_workers
             )
-        return DataLoader(self.tokenized_datasets["valid"], batch_size=self.batch_size, num_workers=self.n_workers)
+        return DataLoader(self.tokenized_datasets["valid"],
+                          batch_size=self.batch_size,
+                          num_workers=self.n_workers)
 
     def convert_to_features(self, examples):
         return self.tokenizer(examples["text"], padding="max_length", truncation=True)

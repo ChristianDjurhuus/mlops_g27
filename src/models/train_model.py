@@ -56,7 +56,7 @@ def main(cfg: DictConfig):
     debug_toggle = cfg.debug_mode
 
     # Return wheither there is 1 or 0 GPUs
-    if cfg.force_CPU == True:
+    if cfg.force_CPU is True:
         GPUs = 0
     else:
         GPUs = torch.cuda.device_count()
@@ -114,7 +114,7 @@ def main(cfg: DictConfig):
         os.makedirs(cfg.local_path)
     tmp_file_name = os.path.join(cfg.local_path, MODEL_FILE_NAME)
     torch.save(model.state_dict(), tmp_file_name)
-    if cfg.google_bucket_path != None:
+    if not cfg.google_bucket_path is None:
         upload_blob(cfg.google_bucket_path, tmp_file_name, timestr + "_model.pt")
 
 

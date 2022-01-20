@@ -1,10 +1,8 @@
-import os
 import torch
 from datasets import load_from_disk, load_metric
 from torch.utils.data import DataLoader
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoTokenizer
 from src.models.model import ImdbTransformer
-from pytorch_lightning import seed_everything
 
 from data_path import get_data_path
 
