@@ -10,17 +10,40 @@ import hydra
 from hydra.utils import to_absolute_path
 from omegaconf import DictConfig
 import wandb
-import subprocess
+from google.cloud import storage
 
 from src.data.load_data import ImdbDataModule
 from src.models.model import ImdbTransformer
 
-MODEL_FILE_NAME = 'torch.model'
+MODEL_FILE_NAME = 'model.pt'
+
+def upload_blob(bucket_name, source_file_name, destination_blob_name):
+    """Uploads a file to the bucket."""
+    # The ID of your GCS bucket
+    # bucket_name = "your-bucket-name"
+    # The path to your file to upload
+    # source_file_name = "local/path/to/file"
+    # The ID of your GCS object
+    # destination_blob_name = "storage-object-name"
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_filename(source_file_name)
+
+    print(
+        "File {} uploaded to {}.".format(
+            source_file_name, destination_blob_name
+        )
+    )
+
 
 @hydra.main(config_path="config", config_name="default_config.yaml")
 def main(cfg: DictConfig):
     # Hyperparmeters
     wandb.init(mode="disabled")
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     os.environ["HYDRA_FULL_ERROR"] = "1"
     cfg = cfg.experiment
     lr = cfg.hyper_param["lr"]
@@ -86,16 +109,13 @@ def main(cfg: DictConfig):
                       default_root_dir=to_absolute_path(cfg.wandb.model_dir))
     trainer.fit(model, datamodule=dm)
 
-    tmp_model_file = os.path.join('/tmp', MODEL_FILE_NAME)
-
     # If local path given, assume to save it locally
-    if cfg.local_path != None:
-        torch.save(model.state_dict(), tmp_model_file)
-        subprocess.check_call([
-            'gsutil', 'cp', tmp_model_file,
-            os.path.join(cfg.google_model_path, MODEL_FILE_NAME)])
-    else:
-        torch.save(model.state_dict(), tmp_model_file)
+    if not os.path.exists(cfg.local_path):
+        os.makedirs(cfg.local_path)
+    tmp_file_name = os.path.join(cfg.local_path, MODEL_FILE_NAME)    
+    torch.save(model.state_dict(), tmp_file_name)
+    if cfg.google_bucket_path != None:
+        upload_blob(cfg.google_bucket_path, tmp_file_name, "model1.pt")
 
 
 

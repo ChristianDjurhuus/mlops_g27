@@ -8,3 +8,4 @@ torch==1.9.0
 pytorch_lightning==1.5.8
 transformers==4.11.0
 scikit-learn
+google-cloud-storage

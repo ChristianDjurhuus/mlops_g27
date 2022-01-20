@@ -26,7 +26,10 @@ class ImdbDataModule(LightningDataModule):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
         self.debug = debug
         self.seed = seed
-        self.n_workers = multiprocessing.cpu_count()*2
+        max_pos_workers = multiprocessing.cpu_count()*2
+
+        # No more than 8 workers are recommended
+        self.n_workers = 8 if(max_pos_workers >= 8) else max_pos_workers
 
     def setup(self, stage=None):
         self.datasets = datasets.load_from_disk(self.data_path)
@@ -46,8 +49,9 @@ class ImdbDataModule(LightningDataModule):
     def train_dataloader(self):
         if self.debug:
             return DataLoader(
-                self.tokenized_datasets["train"].shuffle(seed=self.seed).select(range(4)),
+                self.tokenized_datasets["train"].shuffle(seed=self.seed).select(range(1000)),
                 self.batch_size,
+                num_workers=self.n_workers
             )
         else:
             return DataLoader(self.tokenized_datasets["train"], batch_size=self.batch_size, num_workers=self.n_workers)
@@ -55,8 +59,9 @@ class ImdbDataModule(LightningDataModule):
     def val_dataloader(self):
         if self.debug:
             return DataLoader(
-                self.tokenized_datasets["valid"].shuffle(seed=self.seed).select(range(2)),
-                self.batch_size,
+                self.tokenized_datasets["valid"].shuffle(seed=self.seed).select(range(250)),
+                self.batch_size, 
+                num_workers=self.n_workers
             )
         return DataLoader(self.tokenized_datasets["valid"], batch_size=self.batch_size, num_workers=self.n_workers)
 
