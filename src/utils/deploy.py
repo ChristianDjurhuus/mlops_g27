@@ -1,13 +1,14 @@
-from google.cloud import storage
-from transformers import AutoTokenizer
-from torch.utils.data import DataLoader
-from datasets import Dataset
-import torch
-from pytorch_lightning import LightningModule
 import io
 
-from transformers import AdamW, AutoModelForSequenceClassification, get_scheduler
 import datasets
+import torch
+from datasets import Dataset
+from google.cloud import storage
+from pytorch_lightning import LightningModule
+from torch.utils.data import DataLoader
+from transformers import (AdamW, AutoModelForSequenceClassification,
+                          get_scheduler)
+
 
 class ImdbTransformer(LightningModule):
     """A Pytorch-Lightning DataModule"""
@@ -18,7 +19,7 @@ class ImdbTransformer(LightningModule):
         self,
         model_name: str = "bert-base-cased",
         learning_rate: float = 5e-5,
-        batch_size: int = 32
+        batch_size: int = 32,
     ):
         super().__init__()
         # save all hyperparameters
@@ -82,37 +83,39 @@ class ImdbTransformer(LightningModule):
         scheduler = {"scheduler": scheduler, "interval": "step", "frequency": 1}
         return [optimizer], [scheduler]
 
-BUCKET_NAME = 'g27-models'
-MODEL_FILE = 'model1.pt'
+
+BUCKET_NAME = "g27-models"
+MODEL_FILE = "model1.pt"
 client = storage.Client()
 bucket = client.get_bucket(BUCKET_NAME)
 blob = bucket.get_blob(MODEL_FILE)
-classification = {0:'Negative', 1:'Positive'}
+classification = {0: "Negative", 1: "Positive"}
 
 model = ImdbTransformer(
-        model_name="bert-base-cased",
-        learning_rate=0.01,
-        batch_size=24,
-    )
-print('model defined')
+    model_name="bert-base-cased", learning_rate=0.01, batch_size=24,
+)
+print("model defined")
 data = io.BytesIO(blob.download_as_string())
-print('io')
-model.load_state_dict(torch.load(data, map_location=torch.device('cpu')))
-print('model loaded')
+print("io")
+model.load_state_dict(torch.load(data, map_location=torch.device("cpu")))
+print("model loaded")
 model.eval()
 
 predictions = []
 
+
 def tokenize_function(sample_data):
-    return tokenizer(sample_data['text'], padding="max_length", truncation=True)
+    return tokenizer(sample_data["text"], padding="max_length", truncation=True)
 
 
 def bert_predicter(request):
-    print('im in bert :)')
+    print("im in bert :)")
     requst_json = request.get_json()
-    if request_json and 'input_data' in requet_json:
-        sample_data = request_json['input_data']
-        tokenized_sample = Dataset.from_dict(sample_data).map(tokenize_function, batched=True)
+    if request_json and "input_data" in requet_json:
+        sample_data = request_json["input_data"]
+        tokenized_sample = Dataset.from_dict(sample_data).map(
+            tokenize_function, batched=True
+        )
         tokenized_sample = tokenized_sample.remove_columns(["text"])
         tokenized_sample = tokenized_sample.rename_column("label", "labels")
         tokenized_sample.set_format("torch")
@@ -123,6 +126,6 @@ def bert_predicter(request):
                 logits = outputs.logits
                 predictions = torch.argmax(logits, dim=-1)
                 predictions.append((classification[predictions.data[0].item()]))
-        return f'Sentiment predictions of string(s): {predictions}'
+        return f"Sentiment predictions of string(s): {predictions}"
     else:
-        return 'No input data received'
+        return "No input data received"
