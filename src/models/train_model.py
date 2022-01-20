@@ -114,7 +114,7 @@ def main(cfg: DictConfig):
         os.makedirs(cfg.local_path)
     tmp_file_name = os.path.join(cfg.local_path, MODEL_FILE_NAME)
     torch.save(model.state_dict(), tmp_file_name)
-    if not cfg.google_bucket_path is None:
+    if cfg.google_bucket_path is not None:
         upload_blob(cfg.google_bucket_path, tmp_file_name, timestr + "_model.pt")
 
 
