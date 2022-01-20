@@ -27,14 +27,7 @@ jobs:
           uses: actions/checkout@v2
 
         - name: Build Docker image
-          run: docker build . -t $IMAGE_NAME -f trainer.dockerfile
-
-#       TEST HERE
-#        - name: Test Docker image
-#          run: docker run $IMAGE_NAME 
+          run: docker build . -t $IMAGE_NAME -f gpu_trainer.dockerfile
 
         - name: Push Docker image
           run: docker push $IMAGE_NAME
-
-#        - name: Deploy Docker image
-#          run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed --quiet --memory 16G --cpu 4

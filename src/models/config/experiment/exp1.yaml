@@ -1,8 +1,8 @@
 # @package _group_
 hyper_param:
   lr: 0.01
-  epochs: 10
-  batch_size: 24
+  epochs: 1
+  batch_size: 4
   weighted_decay: 0.0
 
 # No need to change to replicate
@@ -11,17 +11,17 @@ model: "bert-base-cased"
 data_path: "data/processed"
 
 # change to use smaller dataset
-debug_mode: False
+debug_mode: True
 
 # If False, the script will try find GPU's and utilize
 force_CPU: False
 
-# Model savepaths. If local_path given (str.), then google path not used
-google_model_path: "gs://g27-models/experiment1"
-local_path: None
+# If no google, set to None
+google_bucket_path: None 
+local_path: "models"
 
 wandb:
-  mode: "disabled" # "online", "offline" or "disabled". Disabled when gCloud
+  mode: "online" # "online", "offline" or "disabled". Disabled when gCloud
   project: "dtu_mlops_g27"
   entity: "dtu_mlops_g27"
   model_dir: 'models'
