@@ -1,0 +1,10 @@
+click==8.0.3
+datasets==1.17.0
+hydra-core==1.1.1
+omegaconf==2.1.1
+python-dotenv==0.19.2
+wandb==0.12.9
+torch==1.9.0
+pytorch_lightning==1.5.8
+transformers==4.11.0
+scikit-learn

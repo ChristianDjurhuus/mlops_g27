@@ -2,20 +2,25 @@ import os
 
 # Torch Imports
 import torch
-from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning import Trainer, seed_everything
 
 # Experiment tracking and setup
 import hydra
 from hydra.utils import to_absolute_path
 from omegaconf import DictConfig
+import wandb
+import subprocess
 
 from src.data.load_data import ImdbDataModule
 from src.models.model import ImdbTransformer
 
+MODEL_FILE_NAME = 'torch.model'
+
 @hydra.main(config_path="config", config_name="default_config.yaml")
 def main(cfg: DictConfig):
     # Hyperparmeters
+    wandb.init(mode="disabled")
     os.environ["HYDRA_FULL_ERROR"] = "1"
     cfg = cfg.experiment
     lr = cfg.hyper_param["lr"]
@@ -33,10 +38,16 @@ def main(cfg: DictConfig):
     if cfg.force_CPU == True:
         GPUs = 0
     else:
+        GPUs = torch.cuda.device_count()
+
+
+    """
+        # FOR HPC
         GPUs = min(1, torch.cuda.device_count())
         if GPUs == 1:
             os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
             os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+    """
 
     # Fix random seed
     seed_everything(seed)
@@ -69,11 +80,23 @@ def main(cfg: DictConfig):
 
     # Train Model
     trainer = Trainer(max_epochs=epochs, 
+                      precision=16,
                       gpus=GPUs, 
                       logger=wandb_logger, 
                       default_root_dir=to_absolute_path(cfg.wandb.model_dir))
     trainer.fit(model, datamodule=dm)
-    torch.save(model.state_dict(), 'final_model.pt')
+
+    tmp_model_file = os.path.join('/tmp', MODEL_FILE_NAME)
+
+    # If local path given, assume to save it locally
+    if cfg.local_path != None:
+        torch.save(model.state_dict(), tmp_model_file)
+        subprocess.check_call([
+            'gsutil', 'cp', tmp_model_file,
+            os.path.join(cfg.google_model_path, MODEL_FILE_NAME)])
+    else:
+        torch.save(model.state_dict(), tmp_model_file)
+
 
 
 if __name__ == "__main__":

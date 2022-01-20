@@ -5,6 +5,8 @@ from torch.utils.data import DataLoader
 # Transformers
 from transformers import AutoTokenizer
 import datasets
+import multiprocessing
+
 
 class ImdbDataModule(LightningDataModule):
     """A Pytorch-Lightning DataModule"""
@@ -24,6 +26,7 @@ class ImdbDataModule(LightningDataModule):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
         self.debug = debug
         self.seed = seed
+        self.n_workers = multiprocessing.cpu_count()*2
 
     def setup(self, stage=None):
         self.datasets = datasets.load_from_disk(self.data_path)
@@ -47,7 +50,7 @@ class ImdbDataModule(LightningDataModule):
                 self.batch_size,
             )
         else:
-            return DataLoader(self.tokenized_datasets["train"], self.batch_size)
+            return DataLoader(self.tokenized_datasets["train"], batch_size=self.batch_size, num_workers=self.n_workers)
 
     def val_dataloader(self):
         if self.debug:
@@ -55,7 +58,7 @@ class ImdbDataModule(LightningDataModule):
                 self.tokenized_datasets["valid"].shuffle(seed=self.seed).select(range(2)),
                 self.batch_size,
             )
-        return DataLoader(self.tokenized_datasets["valid"], self.batch_size)
+        return DataLoader(self.tokenized_datasets["valid"], batch_size=self.batch_size, num_workers=self.n_workers)
 
     def convert_to_features(self, examples):
         return self.tokenizer(examples["text"], padding="max_length", truncation=True)
