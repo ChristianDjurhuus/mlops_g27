@@ -1,7 +1,4 @@
 [flake8]
- exclude = venv
+ exclude = venv, src/utils/, src/models/deprecated/
  ignore = W503, D203 # W503: Line break occurred before binary operator. D203: Certain folders. See exclude.
  max-line-length = 100
- exclude=
-    src/utils/
-    src/models/deprecated/
