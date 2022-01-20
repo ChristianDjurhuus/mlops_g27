@@ -69,5 +69,16 @@ class ImdbDataModule(LightningDataModule):
                           batch_size=self.batch_size,
                           num_workers=self.n_workers)
 
+    def test_dataloader(self):
+        if self.debug:
+            return DataLoader(
+                self.tokenized_datasets["test"].shuffle(seed=self.seed).select(range(2500)),
+                self.batch_size,
+                num_workers=self.n_workers
+            )
+        return DataLoader(self.tokenized_datasets["test"],
+                          batch_size=self.batch_size,
+                          num_workers=self.n_workers)
+
     def convert_to_features(self, examples):
         return self.tokenizer(examples["text"], padding="max_length", truncation=True)

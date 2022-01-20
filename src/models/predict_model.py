@@ -1,42 +1,35 @@
+from omegaconf import DictConfig
 import torch
-from datasets import load_from_disk, load_metric
-from torch.utils.data import DataLoader
-from transformers import AutoTokenizer
+from datasets import load_metric
 from src.models.model import ImdbTransformer
+from src.data.load_data import ImdbDataModule
+import hydra
+from omegaconf import DictConfig
+from hydra.utils import to_absolute_path
 
-from data_path import get_data_path
-
-
-def fetch_data():
-    path = get_data_path("mlops_g27/data/processed")
-    processed_datasets = load_from_disk(path)
-    tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
-
-    def tokenize_function(examples):
-        return tokenizer(examples["text"], padding="max_length", truncation=True)
-
-    tokenized_datasets = processed_datasets.map(tokenize_function, batched=True)
-    tokenized_datasets = tokenized_datasets.remove_columns(["text"])
-    tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
-    tokenized_datasets.set_format("torch")
-
-    small_test_dataset = (
-        tokenized_datasets["test"].shuffle(seed=1984).select(range(1000))
-    )
-    test_dataloader = DataLoader(small_test_dataset, shuffle=True, batch_size=4)
-    return test_dataloader
-
-
-def evaluate():
+@hydra.main(config_path="config", config_name="default_config.yaml")
+def evaluate(cfg:DictConfig):
     print("Evaluating")
     metric = load_metric("accuracy")
     # initializing wandb logging
-    test_dataloader = fetch_data()
+    # Load Data
+    cfg = cfg.experiment
+    dm = ImdbDataModule(
+        model_name=cfg.model,
+        data_path=to_absolute_path(cfg.data_path),
+        batch_size=cfg.hyper_param["batch_size"],
+        debug=cfg.debug_mode,
+        seed=cfg.seed,
+    )
+    dm.prepare_data()
+    dm.setup("predict")
+    test_dataloader=dm.test_dataloader()
+
     model = ImdbTransformer(
         model_name="bert-base-cased", learning_rate=0.001, batch_size=1,
     )
     model.load_from_checkpoint(
-        "models/dtu_mlops_g27/1j9e0rwl/checkpoints/epoch=19-step=399.ckpt"
+        to_absolute_path("models/models/3jnhnpvp/checkpoints/epoch=0-step=0.ckpt")
     )
 
     # if there is a GPU, the pytorch lightning will move data to cuda automaticly (i guess.)

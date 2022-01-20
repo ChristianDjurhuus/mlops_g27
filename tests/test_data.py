@@ -1,37 +1,27 @@
-import torch
-from datasets import load_dataset
-from transformers import AutoTokenizer
-
-
-def dataload():
-    # Fetching data
-    processed_dataset = load_dataset("imdb")
-    tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
-
-    def tokenize_function(examples):
-        return tokenizer(examples["text"], padding="max_length", truncation=True)
-
-    tokenized_datasets = processed_dataset.map(tokenize_function, batched=True)
-    tokenized_datasets = tokenized_datasets.remove_columns(["text"])
-    tokenized_datasets = tokenized_datasets.rename_column("label", "labels")
-    tokenized_datasets.set_format("torch")
-
-    return tokenized_datasets
-
+from datasets import load_from_disk
 
 class TestClass:
-    tokenized_datasets = dataload()
-    full_train_dataset = tokenized_datasets["train"]
-    full_eval_dataset = tokenized_datasets["test"]
+    data = load_from_disk("data/processed")
+    
+
+    # GET DATA FOR FIT STAGE
+    full_train_dataset = data["train"]
+    full_valid_dataset = data["valid"]
+    full_test_dataset = data["test"]
+
+    full_train_dataset.num_rows
+
+    # Supposed number of data
     N_train = 25000
-    N_test = 25000
+    N_test = 12500
+    N_valid = 12500
 
     # Testing trainingdata
     def test_traindata(self):
         # Number of documents in train corpus
-        labels = self.full_train_dataset["labels"]
+        labels = self.full_train_dataset["label"]
         assert (
-            len(self.full_train_dataset) == self.N_train
+            self.full_train_dataset.num_rows == self.N_train
         ), "Train data did not have the correct number of documents"
 
         # Labels
@@ -39,15 +29,31 @@ class TestClass:
             len(labels) == self.N_train
         ), "Train data did not have the correct number of labels"
         assert all(
-            i in torch.unique(labels) for i in range(1)
+            i in set(labels) for i in range(1)
         ), "At least one train data label wasn't correct."
+
+    def test_valid_data(self):
+        # Image structure
+        labels = self.full_valid_dataset["label"]
+        assert self.full_valid_dataset.num_rows == self.N_valid, (
+            f"Validation data did not have the correct number of documents, "
+            f"but had: {len(self.full_valid_dataset)}"
+        )
+
+        # Labels
+        assert (
+            len(labels) == self.N_valid
+        ), "Test data did not have the correct number of labels"
+        assert all(
+            i in set(labels) for i in range(1)
+        ), "At least one validation data label wasn't correct."
 
     def test_testdata(self):
         # Image structure
-        labels = self.full_eval_dataset["labels"]
-        assert len(self.full_eval_dataset) == self.N_test, (
+        labels = self.full_test_dataset["label"]
+        assert self.full_test_dataset.num_rows == self.N_test, (
             f"Test data did not have the correct number of documents, "
-            f"but had: {len(self.full_eval_dataset)}"
+            f"but had: {len(self.full_test_dataset)}"
         )
 
         # Labels
@@ -55,5 +61,5 @@ class TestClass:
             len(labels) == self.N_test
         ), "Test data did not have the correct number of labels"
         assert all(
-            i in torch.unique(labels) for i in range(1)
+            i in set(labels) for i in range(1)
         ), "At least one test data label wasn't correct."
