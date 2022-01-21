@@ -6,7 +6,8 @@ protobuf==3.19.3
 python-dotenv==0.19.2
 pytorch_lightning==1.5.8
 scikit_learn==1.0.2
-setuptools==60.5.0
+setuptools==59.5.0
 torch==1.9.0
 transformers==4.11.0
+torchmetrics==0.6.2
 wandb==0.12.9
