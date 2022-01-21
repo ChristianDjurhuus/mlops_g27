@@ -7,6 +7,21 @@ This GitHub Repository contains the main components of our exam project. The gro
 - Christian Vestergaard Djurhuus (s194244)
 - Xiang Bai (s213120)
 
+Using the repository
+------------
+A brief giude of how to install and use the repository.
+
+# Using the repository locally and run Dockerfiles
+- Clone the repository
+- Navigate into the cloned repository
+- ```pip install -r requirements.txt```
+- ```pip install -e .```
+
+# Using Google Cloud Project (GCP) and make it run with GitHub Actions
+First of, we recommend that you fork the repository into your own GitHub account. By doing this, you will be able to use the GitHub actions later on to automatically push Dockefiles to your GCP. After having forked the repository
+- GCP Setup
+- Setting up GitHub Secrets
+
 Project description
 ------------
 The purpose of the following project is to become acquainted with the production machine learning life (ML) cycle (Design, Model development and Operations) with a particular focus on the operation stage. Thus, the primary goal of the project is to learn how to manage a production ML life cycle through the usage of good practices and the tools presented in the course “Machine Learning Operations - 02476”.
@@ -130,8 +145,8 @@ point on the checklist for the exam.
 ### Additional
 
 - [ ] Revisit your initial project description. Did the project turn out as you wanted?
-- [ ] Make sure all group members have a understanding about all parts of the project
-- [ ] Create a presentation explaining your project
-- [ ] Uploaded all your code to github
+- [/] Make sure all group members have a understanding about all parts of the project
+- [x] Create a presentation explaining your project
+- [x] Uploaded all your code to github
 - [ ] (extra) Implemented pre-commit hooks for your project repository
 - [ ] (extra) Used Optuna to run hyperparameter optimization on your model
