@@ -34,5 +34,9 @@ jobs:
          pip install -r requirements.txt
     - name: Test with pytest
       run: |
+        pip install dvc
+        pip install dvc[gs]
         pip install pytest
+        dvc pull --run-cache
+        dvc repro
         pytest -v
