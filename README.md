@@ -136,7 +136,7 @@ point on the checklist for the exam.
 
 ### Week 3
 
-- [%] Deployed your model locally using TorchServe (TorchServe not compatible with huggingface transformers yet)
+- [ ] Deployed your model locally using TorchServe (TorchServe not compatible with huggingface transformers yet)
 - [ ] Checked how robust your model is towards data drifting
 - [x] Deployed your model using `gcp`
 - [x] Monitored the system of your deployed model
